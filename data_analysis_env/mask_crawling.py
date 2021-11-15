@@ -4,18 +4,19 @@ import pandas as pd
 import os
 
 # import urllib.request
-import time
+# import time
 
 # 콤마 제거 및 정수형 변환
-
-
 def cleaner(something):
     return int(something.replace(',', ''))
 
+# # 마스크 이미지 담는 폴더 생성
+# if not os.path.isdir('mask_img'):
+#     os.mkdir('mask_img')
 
-with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
+with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as driver:
     # pagingIndex, 원하는 페이지 수 만큼 반복
-    for i in range(1, 2):
+    for i in range(2, 3):
         driver.get(
             'https://search.shopping.naver.com/search/all?frm=NVSHATC%27&origQuery=%EB%A7%88%EC%8A%A4%ED%81%AC&pagingIndex={}&pagingSize=20&productSet=total&query=%EB%A7%88%EC%8A%A4%ED%81%AC&sort=rel&timestamp=&viewType=list'.format(i))
 
@@ -30,9 +31,11 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
 
         # 최종 마스크 데이터 리스트
         mask = []
-
+        # # 마스크 이미지 담는 폴더 생성
+        # if not os.path.isdir('mask_img\{}'.format(i)):
+        #     os.mkdir('mask_img\{}'.format(i))
         # 페이지 당 60개 기준으로 반복
-        for x in range(1, 6):
+        for x in range(1, 21):
             # x번째 마스크로 스크롤
             end_xpath = f'//*[@id="__next"]/div/div[2]/div[2]/div[3]/div[1]/ul/div/div[{x}]/li/div[1]/div[2]/div[5]'
             some_tag = driver.find_element_by_xpath(end_xpath)
@@ -77,10 +80,12 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
                     url = driver.find_element_by_xpath(
                         name_xpath).find_element_by_tag_name('a').get_attribute('href')
 
+
                     # 가져온 url로 접속하여 리뷰 수 가져오기
-                    with webdriver.Chrome(r'C:\Users\chromedriver.exe') as dv:
+                    with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as dv:
                         dv.get('{}'.format(url))
-                        dv.implicitly_wait(2)
+                        driver.implicitly_wait(2)
+
                         # 리뷰 수 있는 곳으로 스크롤 후 리뷰 수 가져오기
                         some_tag = dv.find_element_by_xpath(
                             '//*[@id="content"]/div/div[3]/div[1]')
@@ -113,16 +118,15 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
                     url = driver.find_element_by_xpath(
                         name_xpath).find_element_by_tag_name('a').get_attribute('href')
 
-                    with webdriver.Chrome(r'C:\Users\chromedriver.exe') as dv:
+                    with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as dv:
                         dv.get('{}'.format(url))
-                        dv.implicitly_wait(5)
+                        dv.implicitly_wait(2)
 
                         some_tag = dv.find_element_by_xpath(
                             '//*[@id="content"]/div/div[3]/div[1]')
 
                         action = ActionChains(dv)
                         action.move_to_element(some_tag).perform()
-
                         star_location = dv.find_element_by_xpath(
                             '//*[@id="content"]/div/div[2]/div[1]/div[2]').text
                         star_rating_find = star_location.find('평점')
@@ -131,15 +135,63 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
                                                         2:-3].strip('\n')
                             star_rating = float(star_rating)
                         else:
-                            star_rating = 0
+                            star_rating = float(0)
                 except:
-                    star_rating = 0
+                    star_rating = float(0)
 
-            # 마스크 이미지 url 저장
+            # 마스크 이미지 가져오기
+            # 마스크 이름을 기반으로 링크 정보 가져오기
+            name_url = driver.find_element_by_xpath(
+                name_xpath).find_element_by_tag_name('a').get_attribute('href')
 
+            # 가격비교, 스토어 상품 링크에 들어가는 shopping을 기준으로 구분 (adcr은 공통, shopping은 독립적)
+            if 'shopping' in name_url:
+                with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as dv:
+                    dv.get('{}'.format(name_url))
+                    dv.implicitly_wait(5)
+
+                    '''
+                    # 스크롤 엔드포인트 지정
+                    some_tag = dv.find_element_by_xpath(
+                            #'//*[@id="__next"]/div/div[2]/div[2]/div[2]/div[2]'
+                            #'//*[@id="__next"]/div/div[2]/div[2]/div[2]/div[1]/div/div[2]/div[1]/div[1]'
+                            #'//*[@id="__next"]/div/div[2]/div[2]/div[2]/div[1]/div/div[2]'
+                            '//*[@id="__next"]/div/div[2]/div[2]/div[2]')
+                    action = ActionChains(dv)
+                    action.move_to_element(some_tag).perform()
+                    '''
+                    # 열린 제품 페이지에서 이미지 링크 정보를 가져옴
+                    large_xpath = '//*[@id="__next"]/div/div[2]/div[2]/div[2]/div[1]/div/div[1]/div/div/img'
+                    img_url = dv.find_element_by_xpath(
+                        large_xpath).get_attribute('src')
+                    
+            else:
+                # 광고가 스토어에 연결되는 경우 이미지 링크 정보를 가져옴
+                # 광고가 그 외 다른 사이트의 경우 각 사이트마다 레이아웃이 달라 가져올 수 없으므로 예외처리
+                try:
+                    with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as dv:
+                        dv.get('{}'.format(name_url))
+                        dv.implicitly_wait(5)
+
+                        # some_tag = dv.find_element_by_xpath(
+                        #     '//*[@id="content"]/div/div[3]/div[1]')
+                        # action = ActionChains(dv)
+                        # action.move_to_element(some_tag).perform()
+
+                        large_xpath = '//*[@id="content"]/div/div[2]/div[1]/div[1]/div[1]/img'
+                        img_url = dv.find_element_by_xpath(
+                                large_xpath).get_attribute('src')
+                except :
+                    img_url = None
+
+            ''' 기존 섬네일 이미지 링크 가져오는 코드        
             img_xpath = f'//*[@id="__next"]/div/div[2]/div[2]/div[3]/div[1]/ul/div/div[{x}]/li/div/div[1]/div/a/img'
             img_url = driver.find_element_by_xpath(
                 img_xpath).get_attribute('src')
+
+            마스크 이미지 저장
+            urllib.request.urlretrieve(
+                img_url, '.\mask_img\{0}\{1}번 {2}.jpg'.format(i, x, mask_name))'''
 
             result = [mask_name, review_number,
                       star_rating, price, category, img_url]
@@ -155,3 +207,6 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
         else:
             data.to_csv('mask_data.csv', index=False, mode='a',
                         encoding='utf-8-sig', header=False)
+
+
+# 속도 이슈 해결 및 코드 통합 필요
