@@ -4,7 +4,7 @@ import pandas as pd
 import os
 
 # import urllib.request
-# import time
+import time
 
 # 콤마 제거 및 정수형 변환
 
@@ -13,14 +13,9 @@ def cleaner(something):
     return int(something.replace(',', ''))
 
 
-# 마스크 이미지 담는 폴더 생성
-if not os.path.isdir('mask_img'):
-    os.mkdir('mask_img')
-
-
 with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
     # pagingIndex, 원하는 페이지 수 만큼 반복
-    for i in range(1, 3):
+    for i in range(1, 2):
         driver.get(
             'https://search.shopping.naver.com/search/all?frm=NVSHATC%27&origQuery=%EB%A7%88%EC%8A%A4%ED%81%AC&pagingIndex={}&pagingSize=20&productSet=total&query=%EB%A7%88%EC%8A%A4%ED%81%AC&sort=rel&timestamp=&viewType=list'.format(i))
 
@@ -35,11 +30,9 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
 
         # 최종 마스크 데이터 리스트
         mask = []
-        # 마스크 이미지 담는 폴더 생성
-        if not os.path.isdir('mask_img\{}'.format(i)):
-            os.mkdir('mask_img\{}'.format(i))
+
         # 페이지 당 60개 기준으로 반복
-        for x in range(1, 21):
+        for x in range(1, 6):
             # x번째 마스크로 스크롤
             end_xpath = f'//*[@id="__next"]/div/div[2]/div[2]/div[3]/div[1]/ul/div/div[{x}]/li/div[1]/div[2]/div[5]'
             some_tag = driver.find_element_by_xpath(end_xpath)
@@ -87,8 +80,7 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
                     # 가져온 url로 접속하여 리뷰 수 가져오기
                     with webdriver.Chrome(r'C:\Users\chromedriver.exe') as dv:
                         dv.get('{}'.format(url))
-                        driver.implicitly_wait(2)
-
+                        dv.implicitly_wait(2)
                         # 리뷰 수 있는 곳으로 스크롤 후 리뷰 수 가져오기
                         some_tag = dv.find_element_by_xpath(
                             '//*[@id="content"]/div/div[3]/div[1]')
@@ -123,7 +115,7 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
 
                     with webdriver.Chrome(r'C:\Users\chromedriver.exe') as dv:
                         dv.get('{}'.format(url))
-                        driver.implicitly_wait(2)
+                        dv.implicitly_wait(5)
 
                         some_tag = dv.find_element_by_xpath(
                             '//*[@id="content"]/div/div[3]/div[1]')
@@ -148,10 +140,6 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
             img_xpath = f'//*[@id="__next"]/div/div[2]/div[2]/div[3]/div[1]/ul/div/div[{x}]/li/div/div[1]/div/a/img'
             img_url = driver.find_element_by_xpath(
                 img_xpath).get_attribute('src')
-
-            # 마스크 이미지 저장
-            # urllib.request.urlretrieve(
-            #     img_url, '.\mask_img\{0}\{1}번 {2}.jpg'.format(i, x, mask_name))
 
             result = [mask_name, review_number,
                       star_rating, price, category, img_url]
