@@ -7,6 +7,8 @@ import os
 # import time
 
 # 콤마 제거 및 정수형 변환
+
+
 def cleaner(something):
     return int(something.replace(',', ''))
 
@@ -14,9 +16,10 @@ def cleaner(something):
 # if not os.path.isdir('mask_img'):
 #     os.mkdir('mask_img')
 
-with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as driver:
+
+with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
     # pagingIndex, 원하는 페이지 수 만큼 반복
-    for i in range(2, 3):
+    for i in range(1, 2):
         driver.get(
             'https://search.shopping.naver.com/search/all?frm=NVSHATC%27&origQuery=%EB%A7%88%EC%8A%A4%ED%81%AC&pagingIndex={}&pagingSize=20&productSet=total&query=%EB%A7%88%EC%8A%A4%ED%81%AC&sort=rel&timestamp=&viewType=list'.format(i))
 
@@ -35,7 +38,7 @@ with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as driver:
         # if not os.path.isdir('mask_img\{}'.format(i)):
         #     os.mkdir('mask_img\{}'.format(i))
         # 페이지 당 60개 기준으로 반복
-        for x in range(1, 21):
+        for x in range(1, 5):
             # x번째 마스크로 스크롤
             end_xpath = f'//*[@id="__next"]/div/div[2]/div[2]/div[3]/div[1]/ul/div/div[{x}]/li/div[1]/div[2]/div[5]'
             some_tag = driver.find_element_by_xpath(end_xpath)
@@ -80,9 +83,8 @@ with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as driver:
                     url = driver.find_element_by_xpath(
                         name_xpath).find_element_by_tag_name('a').get_attribute('href')
 
-
                     # 가져온 url로 접속하여 리뷰 수 가져오기
-                    with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as dv:
+                    with webdriver.Chrome(r'C:\Users\chromedriver.exe') as dv:
                         dv.get('{}'.format(url))
                         driver.implicitly_wait(2)
 
@@ -118,7 +120,7 @@ with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as driver:
                     url = driver.find_element_by_xpath(
                         name_xpath).find_element_by_tag_name('a').get_attribute('href')
 
-                    with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as dv:
+                    with webdriver.Chrome(r'C:\Users\chromedriver.exe') as dv:
                         dv.get('{}'.format(url))
                         dv.implicitly_wait(2)
 
@@ -146,7 +148,7 @@ with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as driver:
 
             # 가격비교, 스토어 상품 링크에 들어가는 shopping을 기준으로 구분 (adcr은 공통, shopping은 독립적)
             if 'shopping' in name_url:
-                with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as dv:
+                with webdriver.Chrome(r'C:\Users\chromedriver.exe') as dv:
                     dv.get('{}'.format(name_url))
                     dv.implicitly_wait(5)
 
@@ -164,12 +166,12 @@ with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as driver:
                     large_xpath = '//*[@id="__next"]/div/div[2]/div[2]/div[2]/div[1]/div/div[1]/div/div/img'
                     img_url = dv.find_element_by_xpath(
                         large_xpath).get_attribute('src')
-                    
+
             else:
                 # 광고가 스토어에 연결되는 경우 이미지 링크 정보를 가져옴
                 # 광고가 그 외 다른 사이트의 경우 각 사이트마다 레이아웃이 달라 가져올 수 없으므로 예외처리
                 try:
-                    with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as dv:
+                    with webdriver.Chrome(r'C:\Users\chromedriver.exe') as dv:
                         dv.get('{}'.format(name_url))
                         dv.implicitly_wait(5)
 
@@ -180,9 +182,22 @@ with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as driver:
 
                         large_xpath = '//*[@id="content"]/div/div[2]/div[1]/div[1]/div[1]/img'
                         img_url = dv.find_element_by_xpath(
-                                large_xpath).get_attribute('src')
-                except :
+                            large_xpath).get_attribute('src')
+
+                        protect_factor_xpath = dv.find_element_by_xpath(
+                            '//*[@id="INTRODUCE"]/div/div[3]/div/div[2]/div/table/tbody/tr[1]/td[2]')
+                        mask_function_xpath = dv.find_element_by_xpath(
+                            '//*[@id="INTRODUCE"]/div/div[3]/div/div[2]/div/table/tbody/tr[2]/td[2]')
+                        action = ActionChains(dv)
+                        action.move_to_element(mask_function_xpath).perform()
+                        dv.implicitly_wait(2)
+                        protect_factor = protect_factor_xpath.text
+                        mask_function = mask_function_xpath.text
+
+                except:
                     img_url = None
+                    protect_factor = None
+                    mask_function = None
 
             ''' 기존 섬네일 이미지 링크 가져오는 코드        
             img_xpath = f'//*[@id="__next"]/div/div[2]/div[2]/div[3]/div[1]/ul/div/div[{x}]/li/div/div[1]/div/a/img'
@@ -194,12 +209,12 @@ with webdriver.Chrome(r'/Users/krc/Downloads/chromedriver') as driver:
                 img_url, '.\mask_img\{0}\{1}번 {2}.jpg'.format(i, x, mask_name))'''
 
             result = [mask_name, review_number,
-                      star_rating, price, category, img_url]
+                      star_rating, price, category, protect_factor, mask_function, img_url]
             mask.append(result)
 
         # DataFrame 변환 후 CSV Export
         data = pd.DataFrame(
-            mask, columns=['Name', 'Review', 'Rating', 'Price', 'Category', 'Mask_img'])
+            mask, columns=['Name', 'Review', 'Rating', 'Price', 'Category', 'Protection_factor', 'Mask_function', 'Mask_img', ])
         # 경로에 파일이 존재하는 경우 append, 존재하지 않는 경우 write mode 사용
         if not os.path.exists('mask_data.csv'):
             data.to_csv('mask_data.csv', index=False,
