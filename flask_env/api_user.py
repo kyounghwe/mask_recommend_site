@@ -1,25 +1,23 @@
 ''' api_user.py
 
 메인 / 회원가입 / 로그인 / 로그아웃 '''
-
 from flask import Blueprint, render_template, jsonify, request, redirect, url_for, session
 from models import tb_user_info
 from db_connect import db
+from read_mysql import read_mask_data
 
 user = Blueprint('user', __name__)
 
 # 메인 페이지
-### 회원가입 버튼 누르면 회원가입 페이지로 이동
-### 로그인 버튼 누르면 로그인 페이지로 이동
 @user.route('/')
 def home():
+    mask_list = read_mask_data()
     if not session.get('logged_in'):
         check = 0
-        return render_template('main.html', check=check)  # 로그아웃 상태 메인페이지
+        return render_template('main.html', check=check, mask_list=mask_list)  # 로그아웃 상태 메인페이지
     else:
-        check = 1
-        # 로그인 된 신호를 프론트에 줘야 함 -> 로그인 해야 리뷰, 별점, 찜 등의 기능 이용 가능
-        return render_template("main.html", check=check)  # 로그인 상태 메인페이지
+        check = 1  # 로그인 된 신호를 프론트에 줘야 함 -> 로그인 해야 리뷰, 별점, 찜 등의 기능 이용 가능
+        return render_template("main.html", check=check, mask_list=mask_list)  # 로그인 상태 메인페이지
 
 # 회원가입 페이지
 ### 아이디와 비밀번호 조건 추가해야 함 -> 조건에 맞지 않으면 alert
@@ -40,9 +38,6 @@ def join():
         return render_template('join.html')  # 회원가입 페이지
 
 # 로그인 페이지
-### 입력받은 정보와 데이터베이스와 정보 비교
-### 정보가 일치하면 로그인 된 채로 메인페이지로 이동
-### 일치하지 않으면 alert
 @user.route('/login', methods=["GET", "POST"])
 def login():
     if request.method == 'GET':
@@ -63,9 +58,9 @@ def login():
                     check = 1
                     return redirect(url_for('user.home'))
                 else:  # 아이디, 비밀번호 불일치
-                    errMsg = '비밀번호가 틀렸습니다'
+                    errMsg = '아이디 또는 비밀번호가 틀렸습니다'
             else: # 아이디 없을 때
-                errMsg = '존재하지 않는 아이디입니다'
+                errMsg = '아이디 또는 비밀번호가 틀렸습니다'
         except:
             errMsg = '로그인에 실패하였습니다'
         return render_template('login.html', errMsg=errMsg)

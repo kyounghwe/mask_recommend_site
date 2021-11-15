@@ -1,12 +1,167 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
     <head>
         <meta charset='utf-8'>
         <title>리뷰 작성</title>
+        <style>
+            button{background: inherit ; border: none; box-shadow: none; border-radius: 0; padding: 0; overflow: visible; cursor: pointer}
+            
+            .wrap{
+                width: 600px;
+                margin: 0 auto;
+                margin-top: 30px;
+                background-color: rgb(247, 247, 247);
+            }
+            h1 {
+                font-size: 25px;
+                margin-left: 20px; padding-top: 20px;
+            }
+            fieldset{
+                width: 600px;
+                padding: 0; margin: 0; 
+                font-size: 12px; 
+                font-family: 'dotum' sans-serif; 
+                border: none;
+                /* background-color: skyblue; */
+            }
+            .subtitle {
+                font-size: 17px; font-weight: bold;
+                margin-left: 20px;
+            }
+            .goods_name{
+                margin-bottom: 20px;
+            }
+            .option {
+                margin-left: 20px; margin-top: 10px;
+            }
+            .goods_image {
+                margin-top: 10px; margin-bottom: 30px;
+            }
+            .goods_real_name {
+                padding-left: 45px;
+            }
+            .goods_image input {
+                margin-left: 10px;
+            }
+            .option-element {
+                display: inline-block;
+                padding-right: 15px;
+                width: 100px;
+                font-weight: bold;
+                font-size: 13px;
+            }
+            .review_option {
+                margin-bottom: 30px;
+            }
+            .option_box {
+                background-color: rgb(115, 166, 196, 40%);
+                width: 570px;
+                margin: 0 auto;
+                padding-bottom: 5px;
+            }
+            .option_list{
+                display: inline-block;
+                margin-left: 200px;
+            }
+            .review_text {
+                margin-bottom: 30px;
+                position: relative;
+            }
+            .review_text .subtitle {
+                position: absolute;
+                bottom: 45%;
+            }
+            textarea {
+                width: 400px;
+                height: 100px;
+                margin-left: 120px;
+                border: none;
+            }
+            .btn button {
+                display: block;
+                float: left;
+                width: 50%;
+                height: 40px;
+                background-color: #ddd;
+                font-weight: bold;
+            }
+            .btn button:last-child{
+                background-color:rgb(115, 166, 196);
+            }
+        </style>
     </head>
     <body>
         <div class="wrap">
-            <div></div>
+            <form action = "/write_review" method="POST">
+                <h1>리뷰 작성</h1>
+                <fieldset>
+                    <div class="goods_name">
+                        <p><span class="subtitle">상품명</span><span class="goods_real_name">{{goods_name}}</span></p>
+                        <!-- 상품 데이터베이스에서 상품명 받아와서 자동으로 입력 -->
+                    </div>
+
+                    <div class="review_option">
+                        <span class="subtitle">세부 사항</span>
+                        <div class="option_box">
+                            <div class="option option1">
+                                <span class="option-element">부드러움</span>
+                                <span class="option-list">
+                                    매우 뻣뻣함<input type="radio" name="option1" value=1>
+                                    뻣뻣함<input type="radio" name="option1" value=2>
+                                    보통<input type="radio" name="option1" value=3 checked>
+                                    부드러움<input type="radio" name="option1" value=4>
+                                    매우 부드러움<input type="radio" name="option1" value=5>
+                                </span>
+                            </div>
+                            <div class="option option2">
+                                <span class="option-element">크기</span>
+                                <span class="option-list">
+                                    매우 작음<input type="radio" name="option2" value=1>
+                                    작음<input type="radio" name="option2" value=2>
+                                    보통<input type="radio" name="option2" value=3 checked>
+                                    큼<input type="radio" name="option2" value=4>
+                                    매우 큼<input type="radio" name="option2" value=5>
+                                </span>
+                            </div>
+                            <div class="option option3">
+                                <span class="option-element">내구성</span>
+                                <span class="option-list">
+                                    매우 나쁨<input type="radio" name="option3" value=1>
+                                    나쁨<input type="radio" name="option3" value=2>
+                                    보통<input type="radio" name="option3" value=3 checked>
+                                    좋음<input type="radio" name="option3" value=4>
+                                    매우 좋음<input type="radio" name="option3" value=5>
+                                </span>
+                            </div>
+                            <div class="option option4">
+                                <span class="option-element">숨쉬기</span>
+                                <span class="option-list">
+                                    매우 나쁨<input type="radio" name="option4" value=1>
+                                    나쁨<input type="radio" name="option4" value=2>
+                                    보통<input type="radio" name="option4" value=3 checked>
+                                    좋음<input type="radio" name="option4" value=4>
+                                    매우 좋음<input type="radio" name="option4" value=5>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="goods_image">
+                        <label for="review_image" class="subtitle">사진 업로드</label>
+                        <input type="file" id="review_image" name="review_image">
+                    </div>
+
+                    <div class="review_text">
+                        <span class="subtitle">리뷰 작성</span>
+                        <textarea placeholder="10자 이상 작성"></textarea>
+                    </div>
+
+                </fieldset>
+                <div class="btn">
+                    <button type="reset">취소</button>
+                    <button type="submit">확인</button>
+                </div>
+            </form>
         </div>
     </body>
 </html>
