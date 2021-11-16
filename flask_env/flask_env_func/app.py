@@ -41,7 +41,11 @@ def review():
         img = base64.decodestring(img_str)
         im = Image.open(BytesIO(img))
         
-    return im.show()
+        return im.show()
+        
+    return render_template('review.html')
+
+
 '''@app.route("/",methods=["GET","POST"])
 def join():
     if request.method == 'POST':
