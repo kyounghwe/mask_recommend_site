@@ -28,7 +28,7 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
         # 최종 마스크 데이터 리스트
         mask = []
 
-        for x in range(1, 31):
+        for x in range(1, 61):
             # x번째 마스크로 스크롤
             end_xpath = f'//*[@id="__next"]/div/div[2]/div[2]/div[3]/div[1]/ul/div/div[{x}]/li/div[1]/div[2]/div[5]'
             some_tag = driver.find_element_by_xpath(end_xpath)
@@ -190,14 +190,22 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
                     review_number = 0
 
             main_func.sort()
-            if len(main_func) != 0:
-                if "KF" in main_func[0]:
-                    protect_factor = main_func[0]
-                    mask_func = main_func[1:]
+            if "일회용" in main_func:
+                main_func.remove("일회용")
+            if "접이식" in main_func:
+                main_func.remove("접이식")
+            try:
+                if len(main_func) != 0:
+                    if "KF" in main_func[0]:
+                        protect_factor = main_func[0]
+                        mask_func = main_func[1]
+                    else:
+                        protect_factor = None
+                        mask_func = main_func[0]
                 else:
                     protect_factor = None
-                    mask_func = main_func
-            else:
+                    mask_func = None
+            except:
                 protect_factor = None
                 mask_func = None
 
