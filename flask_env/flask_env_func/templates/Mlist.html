@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+{% if Mlist %}
+    <ul>
+        {% for member in Mlist %}
+             <li><p>{{ member.user_id }} {{ member.user_pw }} {{ member.user_age }}
+                {{ member.user_job }} {{ member.user_gender }}
+             </p></li>
+             
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>멤버가 없습니다.</p>
+{% endif %}
