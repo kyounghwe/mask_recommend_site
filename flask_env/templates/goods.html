@@ -4,34 +4,34 @@
         <meta charset="utf-8">
         <title>상품상세페이지</title>
         <style>
-            li {list-style: none;}
+            ul, li {list-style: none;padding:0;margin:0;}
             button{background: inherit ; border: none; box-shadow: none; border-radius: 0; padding: 0; overflow: visible; cursor: pointer}
-            .wrap {width: 780px; margin: 0 auto; font-family: 'dotum' sans-serif;}
-            .goods_info {width: 100%; height: 400px; margin-top: 80px; margin-bottom: 30px; background-color: rgb(247, 247, 247);}
+            .wrap {width: 600px; margin: 0 auto; font-family: 'dotum' sans-serif; background-color:rgb(247, 247, 247);}
+            .goods_info {width: 100%; height: 250px; margin-top: 80px;}
             .goods_left { /* 이미지 구역 */
-                width: 400px; height: 100%; background-color: rgb(85, 93, 117, 30%);
-                margin-right: 30px;
+                width: 250px; height: 250px; background-color: rgb(85, 93, 117, 30%);
                 float: left;
             }
             .goods_right { /* 상품 정보 구역 */
-                width: 350px; height: 100%; background-color: rgb(177, 177, 219, 10%);
+                width: 350px; height: 100%;
                 float: left;
             }
             .li_info {
-                font-size: 25px; font-weight: bold;
+                font-size: 15px; font-weight: bold; margin-left: 30px; margin-top: 10px;
                 margin-bottom: 20px;
             }
             .btn {
-                width: 85%; height: 45px; margin: 20px 26.25px;
+                display:inline-block;
+                width: 40%; height: 25px; margin: 5px 26.25px;
                 background-color: rgb(115, 166, 196);
-                font-size: 20px; font-weight: bold;
+                font-size: 12px; font-weight: bold;
             }
             .review_title {
-                width: 100%; height: 50px; line-height: 50px;
+                width: 100%; height: 35px; line-height: 35px;
                 background-color: rgb(134, 156, 156);
                 text-align: center;
                 margin: 0;
-                font-size: 25px; font-weight: bold;;
+                font-size: 18px; font-weight: bold;;
             }
             .review_set {
                 width: 100%;
@@ -39,21 +39,19 @@
             .review {
                 width: 100%;
                 height: 250px;
-                background-color: rgb(191, 191, 206);
-                margin-bottom: 20px;
             }
             .review_left {
-                width: 250px; height: 250px; background-color: teal; float: left; margin-right: 30px;
+                width: 250px; height: 250px; background-color: teal; float: left;
             }
             .review_right {
-                width: 480px;
+                width: 330px;
                 padding: 10px;
                 height: 230px;
                 background-color:wheat;
                 float: left;
             }
             .star_rating {
-                width: 480px;
+                width: 330px;
                 height: 40px;
                 background-color:thistle;
                 margin-bottom: 10px;
@@ -63,17 +61,23 @@
                 height: 180px;
                 background-color: tomato;
             }
+            img {
+                width: 100%;
+                height: 100%;
+                vertical-align: middle;
+            }
         </style>
     </head>
     <body>
         <div class="wrap">
             <div class="goods_info">
-                <div class="goods_left">그림</div>
+                <div class="goods_left"><img src={{mask_info_list[0][3]}} alt="Mask Image"></div>  <!-- 이미지 -->
                 <div class="goods_right">
                     <ul>
-                        <li class="li_info">상품명</li>
-                        <li class="li_info">가격</li>
-                        <li class="li_info"><a href=#>구매링크</a></li>
+                        <li class="li_info">{{mask_info_list[0][0]}}</li>  <!-- 이름 -->
+                        <li class="li_info">{{mask_info_list[0][1]}}원</li>  <!-- 가격 -->
+                        <li class="li_info">{{mask_info_list[0][2]}}</li>  <!-- 별점 -->
+                        <li class="li_info"><a href={{mask_info_list[0][4]}}>구매링크</a></li>  <!-- 구매링크 -->
                     </ul>
                     <button id='btn_zzim' class='btn' type="submit">찜</button>
                     <button id='btn_review' class='btn' type="submit">리뷰작성</button>
@@ -90,9 +94,6 @@
                         <div class="review_content">내용</div> <!-- 리뷰 항목에 따로 지정할 수 있는 항목 ex)착용감, 크기, 숨쉬기 편한 정도 등의 항목 세울 수 있음 -->
                     </div>
                 </div>
-                <div class="review"></div>
-                <div class="review"></div>
-                <div class="review"></div>
             </div>
         </div>
     </body>

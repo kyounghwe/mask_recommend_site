@@ -2,7 +2,7 @@
 mysql
     -> try_mysql 데이터베이스
         -> tb_user_info 테이블 *
-        -> tb_goods_info 테이블
+        -> tb_goods_info 테이블 (temp)
         -> tb_review 테이블
         -> tb_zzim 테이블
 '''

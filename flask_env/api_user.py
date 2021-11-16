@@ -1,7 +1,7 @@
 ''' api_user.py
 
 메인 / 회원가입 / 로그인 / 로그아웃 '''
-from flask import Blueprint, render_template, jsonify, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from models import tb_user_info
 from db_connect import db
 from read_mysql import read_mask_data
@@ -71,7 +71,8 @@ def login():
 @user.route('/logout')
 def logout():
     session['logged_in'] = False
-    session['user'] = None
+    session['user_id'] = None
     errMsg = None
     check = 0
-    return render_template('main.html', check=check)
+    mask_list = read_mask_data()
+    return render_template('main.html', check=check, mask_list=mask_list)

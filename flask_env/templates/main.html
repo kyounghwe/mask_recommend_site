@@ -50,7 +50,7 @@
                 float: left;
                 margin-bottom: 15px;
             }
-            .article_box ul{
+            .article_box>ul{
                 width: 258.75px;
                 height: 100%;
                 margin-right: 15px;
@@ -129,22 +129,24 @@
             </nav>
             <section>
                 <article>
-                    <div class="article_box"> <!--mask_name, mask_price, star_rating, mask_url-->
+                    <div class="article_box"> <!--mask_name, mask_price, star_rating, mask_url, pk_id-->
                         {% for i in range(4) %}
-                        <ul>
-                            <li><a href='#'><img src={{mask_list[i][3]}} alt="Mask Image"></a></li>
-                            <li><a href='#'>
+                        <ul id="mask_box">
+                            <li><a href="/goods?data={{mask_list[i][4]}}"><img src={{mask_list[i][3]}} alt="Mask Image"></a></li>
+                            <li><a href="/goods?data={{mask_list[i][4]}}">
                                 <span>{{mask_list[i][0]}}</span>
                                 <span>{{mask_list[i][1]}}</span>
                                 <span>{{mask_list[i][2]}}</span>
                             </a></li>
-                        </ul>
+                            </ul>
                         {% endfor %}
                 </article>
             </section>
+
             <footer>
                 footer
             </footer>
         </div>
     </body>
 </html>
+
