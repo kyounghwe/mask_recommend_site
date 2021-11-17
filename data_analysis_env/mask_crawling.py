@@ -14,7 +14,7 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
     # pagingIndex, 원하는 페이지 수 만큼 반복
     for i in range(1, 2):
         driver.get(
-            'https://search.shopping.naver.com/search/all?frm=NVSHATC%27&origQuery=%EB%A7%88%EC%8A%A4%ED%81%AC&pagingIndex={}&pagingSize=60&productSet=total&query=%EB%A7%88%EC%8A%A4%ED%81%AC&sort=rel&timestamp=&viewType=list'.format(i))
+            'https://search.shopping.naver.com/search/all?frm=NVSHATT&origQuery=%EB%A7%88%EC%8A%A4%ED%81%AC&pagingIndex={}&pagingSize=60&productSet=total&query=%EB%A7%88%EC%8A%A4%ED%81%AC&sort=rel&spec=M10018852%7CM10811849%20M10018852%7CM10811848%20M10018852%7CM10907665%20M10018852%7CM10811847&timestamp=&viewType=list'.format(i))
 
         # 페이지 내 데이터 로딩 대기
         driver.implicitly_wait(2)
@@ -65,42 +65,43 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
             name_url = driver.find_element_by_xpath(
                 name_xpath).find_element_by_tag_name('a').get_attribute('href')
 
-            # 가격비교, 스토어 상품 링크에 들어가는 shopping을 기준으로 구분 (adcr은 공통, shopping은 독립적)
-            # shopping일 때, 최저가 링크, 이미지, 마스크 기능, 차단지수
-            if 'shopping' in name_url:
-                # 메인페이지에서 리뷰 수, 별점 가져오기
-                # 네이버 쇼핑 메인페이지에 리뷰 수와 별점이 있을 경우
-                if '리뷰' in review_area.text and '리뷰별점' in star.text:
-                    review_number = driver.find_element_by_xpath(
-                        review_xpath+'/a[1]/em[@class="basicList_num__1yXM9"]').text
-                    review_number = cleaner(review_number)
+            with webdriver.Chrome(r'C:\Users\chromedriver.exe') as dv:
+                dv.get('{}'.format(name_url))
+                dv.implicitly_wait(5)
+                current_url = dv.current_url
 
-                    star_rating = driver.find_element_by_xpath(
-                        star_path+'/a/span/span[@class="basicList_star__3NkBn"]').text
-                    star_rating = float(star_rating[3:])
-                # 네이버 쇼핑 메인페이지에 리뷰 수만 있을 경우
-                elif '리뷰' in review_area.text and '리뷰별점' not in star.text:
-                    review_number = driver.find_element_by_xpath(
-                        review_xpath+'/a[1]/em[@class="basicList_num__1yXM9"]').text
-                    review_number = cleaner(review_number)
-                    star_rating = float(0)
-                # 네이버 쇼핑 메인페이지에 별점만 있을 경우
-                elif '리뷰' not in review_area.text and '리뷰별점' in star.text:
-                    review_number = 0
-                    star_rating = driver.find_element_by_xpath(
-                        star_path+'/a/span/span[@class="basicList_star__3NkBn"]').text
-                    star_rating = float(star_rating[3:])
-                # 네이버 쇼핑 메인페이지에 둘다 없을 경우
-                else:
-                    review_number = 0
-                    star_rating = float(0)
+                # 가격비교, 스토어 상품 링크에 들어가는 shopping을 기준으로 구분 (adcr은 공통, shopping은 독립적)
+                # shopping일 때, 최저가 링크, 이미지, 마스크 기능, 차단지수
+                if 'shopping' in current_url:
+                    # 메인페이지에서 리뷰 수, 별점 가져오기
+                    # 네이버 쇼핑 메인페이지에 리뷰 수와 별점이 있을 경우
+                    if '리뷰' in review_area.text and '리뷰별점' in star.text:
+                        review_number = driver.find_element_by_xpath(
+                            review_xpath+'/a[1]/em[@class="basicList_num__1yXM9"]').text
+                        review_number = cleaner(review_number)
 
-                # 마스크 이미지, 차단지수, 기능, 최저가 사이트 url
-                try:
-                    with webdriver.Chrome(r'C:\Users\chromedriver.exe') as dv:
-                        dv.get('{}'.format(name_url))
-                        dv.implicitly_wait(5)
+                        star_rating = driver.find_element_by_xpath(
+                            star_path+'/a/span/span[@class="basicList_star__3NkBn"]').text
+                        star_rating = float(star_rating[3:])
+                    # 네이버 쇼핑 메인페이지에 리뷰 수만 있을 경우
+                    elif '리뷰' in review_area.text and '리뷰별점' not in star.text:
+                        review_number = driver.find_element_by_xpath(
+                            review_xpath+'/a[1]/em[@class="basicList_num__1yXM9"]').text
+                        review_number = cleaner(review_number)
+                        star_rating = float(0)
+                    # 네이버 쇼핑 메인페이지에 별점만 있을 경우
+                    elif '리뷰' not in review_area.text and '리뷰별점' in star.text:
+                        review_number = 0
+                        star_rating = driver.find_element_by_xpath(
+                            star_path+'/a/span/span[@class="basicList_star__3NkBn"]').text
+                        star_rating = float(star_rating[3:])
+                    # 네이버 쇼핑 메인페이지에 둘다 없을 경우
+                    else:
+                        review_number = 0
+                        star_rating = float(0)
 
+                    # 마스크 이미지, 차단지수, 기능, 최저가 사이트 url
+                    try:
                         # 스크롤 엔드포인트 지정
                         some_tag = dv.find_element_by_xpath(
                             '//*[@id="__next"]/div/div[2]/div[2]/div[2]')
@@ -124,22 +125,15 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
                             main_func.append(some_func)
                         # 구매링크
                         purchase_link = name_url
+                    except:
+                        main_func.append(None)
 
-                except:
-                    main_func.append(None)
-
-            # shopping이 아닐 때, 구매링크, 이미지, 마스크 기능, 차단지수, 별점, 리뷰수
-            else:
-                try:
-                    with webdriver.Chrome(r'C:\Users\chromedriver.exe') as dv:
-                        dv.get('{}'.format(name_url))
-                        dv.implicitly_wait(5)
-
+                #  smart일 때, 구매링크, 이미지, 마스크 기능, 차단지수, 별점, 리뷰수
+                elif "smart" in current_url:
+                    try:
                         # 구매 링크
                         purchase_link = name_url
-
                         large_xpath = '//*[@id="content"]/div/div[2]/div[1]/div[1]/div[1]/img'
-
                         # 마스크 이미지
                         img_url = dv.find_element_by_xpath(
                             large_xpath).get_attribute('src')
@@ -183,19 +177,31 @@ with webdriver.Chrome(r'C:\Users\chromedriver.exe') as driver:
                             review_number = cleaner(review_number)
                         else:
                             review_number = 0
-                except:
-                    purchase_link = name_url
-                    main_func.append(None)
-                    star_rating = float(0)
-                    review_number = 0
+                    except:
+                        purchase_link = name_url
+                        main_func.append(None)
+                        star_rating = float(0)
+                        review_number = 0
 
-            main_func.sort()
+                else:
+                    mask_name = None
+                    review_number = None
+                    star_rating = None
+                    price = None
+                    category = None
+                    protect_factor = None
+                    mask_func = None
+                    img_url = None
+                    purchase_link = None
+
             if "일회용" in main_func:
                 main_func.remove("일회용")
             if "접이식" in main_func:
                 main_func.remove("접이식")
+
             try:
                 if len(main_func) != 0:
+                    main_func.sort()
                     if "KF" in main_func[0]:
                         protect_factor = main_func[0]
                         mask_func = main_func[1]
