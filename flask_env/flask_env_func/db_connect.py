@@ -1,8 +1,15 @@
+#이미지 데이터베이스에서 읽기
+import io
+import os
+import PIL
+from io import BytesIO
+
+#기존 임폿
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 import pymysql
 
-from io import BytesIO
+
 
 
 
@@ -34,3 +41,4 @@ def Mask_CSV():
 
     conn.close()
     return r
+

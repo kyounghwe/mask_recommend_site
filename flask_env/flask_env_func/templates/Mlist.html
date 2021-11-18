@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-{% if Mlist %}
-    <ul>
-        {% for member in Mlist %}
-             <li><p>{{ member.user_id }} {{ member.user_pw }} {{ member.user_age }}
-                {{ member.user_job }} {{ member.user_gender }}
-             </p></li>
-             
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>업로드</title>
+    </head>
+    <body>
+        <form action="/" enctype="multipart/form-data" method="POST">
+            <input type="file" name="pic"/>
+            <input type="submit" value="Upload a file"/>
+        </form>  
+        {% for i in show %}
+           <img src= "data:image/png;base64, {{i}}"/>
+
         {% endfor %}
-    </ul>
-{% else %}
-    <p>멤버가 없습니다.</p>
-{% endif %}
+    </body>
+    
+</html>
