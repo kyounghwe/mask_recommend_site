@@ -11,6 +11,7 @@ from db_connect import db
 
 from api_user import user
 from api_goods import goods
+from api_user_page import user_page
 
 app = Flask(__name__)
 db.init_app(app)
@@ -22,6 +23,7 @@ app.config['SECRET_KEY'] = 'the random string'  # session 실행하려면 시크
 
 app.register_blueprint(user)
 app.register_blueprint(goods)
+app.register_blueprint(user_page)
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1',port=5000, debug=True)
