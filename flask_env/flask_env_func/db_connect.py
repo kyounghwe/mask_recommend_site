@@ -21,6 +21,7 @@ conn = pymysql.connect(host='127.0.0.1', user='root',
 
 cursor = conn.cursor()
 
+#이미지 저장
 buffer = BytesIO()
 engine = create_engine('mysql+pymysql://root:ekdldksk@localhost:3306/testdb', echo=False)
 
