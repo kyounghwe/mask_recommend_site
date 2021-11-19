@@ -6,8 +6,7 @@
         <style>
             ul, li {list-style: none;padding:0;margin:0;}
             a {text-decoration: none; color: inherit;}
-            /* button{background: inherit ; border: none; box-shadow: none; border-radius: 0; padding: 0; overflow: visible; cursor: pointer} */
-            .wrap {width: 600px; margin: 0 auto; font-family: 'dotum' sans-serif; background-color:violet;}
+            .wrap {width: 600px; margin: 0 auto; font-family: 'dotum' sans-serif; background-color:rgb(247, 247, 247);}
             .goods_info {width: 100%; height: 250px; margin-top: 80px;}
             .goods_left { /* 이미지 구역 */
                 width: 250px; height: 250px; background-color: rgb(85, 93, 117, 30%);
@@ -23,7 +22,8 @@
             }
             .goods_right a:first-child {
                 display: block; 
-                background-color:aquamarine; 
+                background-color:#ffffff;
+                box-sizing: border-box; border: 1px solid rgb(200, 200, 200); 
                 width: 290px; height: 40px; line-height:40px; text-align: center;
             }
             .btn {
@@ -31,11 +31,11 @@
                 width: 140px; height: 40px; line-height: 40px; margin: 0;
                 font-size: 13px; font-weight: bold; text-align: center;
             }
-            #btn_zzim {background-color: pink; margin-left: 30px;}
-            #btn_review {background-color: yellow; margin-left: 10px;}
+            #btn_zzim {background-color: rgb(136, 197, 233); margin-left: 30px;}
+            #btn_review {background-color: rgb(17, 82, 168); margin-left: 10px; color: white;}
 
             .option_info {
-                background-color: ivory;
+                background-color: rgb(255, 255, 255);
                 width: 100%;
                 height: 40px; line-height: 40px;
                 text-align: center;
@@ -47,7 +47,7 @@
 
             .review_title {
                 width: 100%; height: 35px; line-height: 35px;
-                background-color: rgb(134, 156, 156);
+                background-color: rgb(200, 200, 200);
                 text-align: center;
                 margin: 0;
                 font-size: 18px; font-weight: bold;;
@@ -67,19 +67,19 @@
                 width: 380px;
                 padding: 10px;
                 height: 180px;
-                /* background-color:wheat; */
+                background-color:rgb(224, 240, 255);
                 float: left;
             }
             .star_rating {
                 width: 100%;
                 height: 30px;
-                background-color:thistle;
+                /* background-color:rgb(255, 255, 255); */
                 margin-bottom: 10px;
             }
             .review_content {
                 width: 100%;
-                height: 150px;
-                background-color: tomato;
+                height: 140px;
+                background-color: rgb(255, 255, 255);
             }
             img {
                 width: 100%;
@@ -100,11 +100,11 @@
                         <li class="li_info">{{mask_info_list[0][0]}}</li>  <!-- 이름 -->
                         <li class="li_info">{{mask_info_list[0][1]}}원</li>  <!-- 가격 -->
                         <li class="li_info">별점: {{mask_info_list[0][2]}}</li>  <!-- 별점 -->
-                        <li class="li_info"><a href={{mask_info_list[0][5]}}>구매링크</a></li>  <!-- 구매링크 -->
+                        <li class="li_info"><a href="#">구매링크</a></li>  <!-- 구매링크 mask_info_list[0][3]-->
                     </ul>
                     <a href="#" id='btn_zzim' class='btn'>찜</a>
                     {% if user_id != None %}
-                    <a href="/review?mask_id={{mask_info_list[0][4]}}&user_id={{user_id}}" id='btn_review' class='btn'>리뷰작성</a>
+                    <a href="/review" id='btn_review' class='btn'>리뷰작성</a>
                     {% else %}
                     <a href="#" id='btn_review' class='btn'>리뷰작성</a>
                     {% endif %}

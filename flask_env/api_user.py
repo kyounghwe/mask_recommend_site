@@ -12,12 +12,24 @@ user = Blueprint('user', __name__)
 @user.route('/')
 def home():
     mask_list = read_mask_data()
+    page = request.args.get('page')
+    if page != None:
+        page = int(page)
+        if session['page_num'] - page == 1 and session['page_num'] > 0:  # prev페이지로 갈 때
+            session['page_num'] -= 1
+        elif session['page_num'] - page == -1 and session['page_num'] < len(mask_list)//16:  # next페이지로 갈 때
+            session['page_num'] += 1
+    else:
+        session['page_num'] = 0
+    
+    mask_list = mask_list[session['page_num']*16:session['page_num']*16 + 16]
+    
     if not session.get('logged_in'):
         check = 0
-        return render_template('main.html', check=check, mask_list=mask_list)  # 로그아웃 상태 메인페이지
+        return render_template('main.html', check=check, mask_list=mask_list, page_num=session['page_num'])  # 로그아웃 상태 메인페이지
     else:
         check = 1  # 로그인 된 신호를 프론트에 줘야 함 -> 로그인 해야 리뷰, 별점, 찜 등의 기능 이용 가능
-        return render_template("main.html", check=check, mask_list=mask_list)  # 로그인 상태 메인페이지
+        return render_template("main.html", check=check, mask_list=mask_list, page_num=session['page_num'])  # 로그인 상태 메인페이지
 
 # 회원가입 페이지
 ### 아이디와 비밀번호 조건 추가해야 함 -> 조건에 맞지 않으면 alert
@@ -75,4 +87,4 @@ def logout():
     errMsg = None
     check = 0
     mask_list = read_mask_data()
-    return render_template('main.html', check=check, mask_list=mask_list)
+    return render_template('main.html', check=check, mask_list=mask_list, page_num=session['page_num'])

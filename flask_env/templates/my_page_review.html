@@ -3,14 +3,40 @@
     <head>
         <meta charset="utf-8">
         <title>나의 리뷰</title>
+        <style>
+            ul, li {list-style: none;padding:0;margin:0;}
+            .wrap {width: 500px; margin: 0 auto; padding: 20px; background-color: rgb(247, 247, 247);margin-top:50px;}
+            .review_table {
+                width: 500px;
+                /* margin-left: 10px; */
+                height: 100%;
+                background-color: blue;
+            }
+        </style>
     </head>
     <body>
         <div class="wrap">
-        {% for i in review_list %}
-            <div class="review_row">
-                
-            </div>
-        {% endfor %}
+            <h2>나의 리뷰</h2>
+            {% if user_review_list %}
+            <ul class="review_table">
+                {% for i in user_review_list %}  <!-- mask_id, star_rating, review_text, img -->
+                <li class="review_row">
+                    <ul class="review_contents">
+                        <li class="img">{{ i[3] }}</li>
+                        <li class="mask_name">{{ i[0] }}</li>
+                        <li class="star_rating">{{ i[1] }}</li>
+                        <li class="review_text">{{ i[2] }}</li>
+                        <li class="btn">
+                            <a href="#">수정</a>
+                            <a href="#">삭제</a>
+                        </li>
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+                <p>남긴 리뷰가 없습니다</p>
+            {% endif %}
         </div>
     </body>
 </html>

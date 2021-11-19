@@ -48,7 +48,7 @@ class tb_review(db.Model):  # 임의로 써놓은 것이기 때문에 조정 필
     option2 = db.Column(db.Integer, nullable=False)
     option3 = db.Column(db.Integer, nullable=False)
     option4 = db.Column(db.Integer, nullable=False)
-    img = db.Column(db.String, nullable=True)
+    img = db.Column(db.String, nullable=False)
 
     def __init__(self, mask_id, user_id, star_rating, review_text, option1, option2, option3, option4, img):
         self.mask_id = mask_id

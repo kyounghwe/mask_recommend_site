@@ -34,7 +34,7 @@ def read_mask_page_data(data):
     cursor = mask_db.cursor()
     # 나중에 구매링크 컬럼도 끝에 추가하기
     sql = f'''
-            SELECT mask_name, mask_price, mask_star_rating, mask_img, pk_id
+            SELECT mask_name, mask_price, mask_star_rating, mask_img
             FROM temp_mask_info
             WHERE pk_id LIKE {data}
         '''
@@ -43,7 +43,7 @@ def read_mask_page_data(data):
     mask_db.close()
     return rows
 
-def read_review_data(data): # 아직 만드는 중
+def read_review_data(data):  # 리뷰데이터: 이미지 뺀 나머지 컬럼 모두 불러옴
     mask_db = pymysql.connect(
         user='root',
         passwd='5452tulahyo12!A',
@@ -53,7 +53,7 @@ def read_review_data(data): # 아직 만드는 중
     )
     cursor = mask_db.cursor()
     sql = f'''
-            SELECT *
+            SELECT pk_id, mask_id, user_id, star_rating, review_text, option1, option2, option3, option4
             FROM tb_review
             WHERE mask_id LIKE {data}
         '''
@@ -93,6 +93,25 @@ def get_user(data):
     sql = f'''
             SELECT pk_id 
             FROM tb_user_info 
+            WHERE user_id LIKE '{data}'
+        '''
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+    mask_db.close()
+    return rows
+
+def get_my_review(data):  # temp_mask_info테이블과 join해야함 - 마스크이름 얻기
+    mask_db = pymysql.connect(
+        user='root',
+        passwd='5452tulahyo12!A',
+        host='127.0.0.1',
+        db='try_mysql',
+        charset='utf8'
+    )
+    cursor = mask_db.cursor()
+    sql = f'''
+            SELECT mask_id, star_rating, review_text, img
+            FROM tb_review 
             WHERE user_id LIKE '{data}'
         '''
     cursor.execute(sql)
