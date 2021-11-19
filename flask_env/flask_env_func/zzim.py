@@ -3,7 +3,7 @@ from flask import Flask, render_template,request,session,redirect,url_for
 from db_connect import db, db_connector
 import cgi
 
-from models import Member
+from models import Zzim
 
 form = cgi.FieldStorage()
 
@@ -44,13 +44,22 @@ def logout():
 @app.route('/',methods=['GET','POST'])
 def zzim_in():
     if request.method == 'POST':
-        if session['user_id'] != None:
-            session['zzim_in'] = True
+        
+        if request.form.get("zzim_btn"):
+            goods_info = request.form['r_op1']
+            user_info = session['user']
+            
+            zzim_info = Zzim(user_info,goods_info)
+            db.session.add(zzim_info)
+            db.session.commit()
             return redirect(url_for('zzim_in'))
         else:
-            return render_template('login.html')
-    else:
-        return render_template('zzim.html')
+            return render_template('zzim.html')
+    return render_template('zzim.html')
+
+
+
+
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1',port=5000, debug=True)

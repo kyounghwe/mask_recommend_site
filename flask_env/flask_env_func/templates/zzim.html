@@ -1,24 +1,16 @@
 <!DOCTYPE html>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<from action="/" method='post'>
-    <div class="zzim_bnt">
-        <h3>찜하기</h3>
-        <a href=# id = zzim_bnt><button class="zzim_bnt1">찜</button></a>
-
-    </div>
-<script>
-    $(function()
-    {
-        $('#zzim_button').on('click',function(e){
-            e.preventDefault()
-            $.getJSON('/zzim_in',
-                function(data){
-
-            });
-            return false;
-        });
-    });
-</script>
-</from>
+<html lang="ko">
+    <form action="/" method="POST">
+    <p>
+        <span class="join-element special">옵션1</span>
+        <span class="r_op1-list">
+            회사원<input type="radio" name="r_op1" value="1" checked>
+            주부<input type="radio" name="r_op1" value="2">
+            학생<input type="radio" name="r_op1" value="3">
+            자영업<input type="radio" name="r_op1" value="1"><br>
+        </span>
+    </p>
+    <button type="submit" name = "zzim_btn" value="zzim_btn" onclick="">찜</button>
+    <input type="checkbox" data-toggle="toggle">
+</form>
 </html>
