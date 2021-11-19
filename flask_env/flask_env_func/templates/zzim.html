@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<from action="/" method='post'>
+    <div class="zzim_bnt">
+        <h3>찜하기</h3>
+        <a href=# id = zzim_bnt><button class="zzim_bnt1">찜</button></a>
+
+    </div>
+<script>
+    $(function()
+    {
+        $('#zzim_button').on('click',function(e){
+            e.preventDefault()
+            $.getJSON('/zzim_in',
+                function(data){
+
+            });
+            return false;
+        });
+    });
+</script>
+</from>
+</html>
