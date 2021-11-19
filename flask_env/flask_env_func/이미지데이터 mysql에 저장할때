@@ -1,0 +1,12 @@
+
+
+
+
+
+
+CREATE TABLE review(
+    id int primary key not null auto_increment,
+
+    다른건 float 이나 varchar로 해도 상관없음 위에 거도 그냥 적은것 
+
+    image longblob not null);
