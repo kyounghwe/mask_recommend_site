@@ -94,13 +94,13 @@
     <body>
         <div class="wrap">
             <div class="goods_info">
-                <div class="goods_left"><img src={{mask_info_list[0][3]}} alt="Mask Image"></div>  <!-- 이미지 -->
+                <div class="goods_left"><img src={{mask_data_list[0][3]}} alt="Mask Image"></div>  <!-- 이미지 -->
                 <div class="goods_right">
                     <ul>
-                        <li class="li_info">{{mask_info_list[0][0]}}</li>  <!-- 이름 -->
-                        <li class="li_info">{{mask_info_list[0][1]}}원</li>  <!-- 가격 -->
-                        <li class="li_info">별점: {{mask_info_list[0][2]}}</li>  <!-- 별점 -->
-                        <li class="li_info"><a href="#">구매링크</a></li>  <!-- 구매링크 mask_info_list[0][3]-->
+                        <li class="li_info">{{mask_data_list[0][0]}}</li>  <!-- 이름 -->
+                        <li class="li_info">{{mask_data_list[0][1]}}원</li>  <!-- 가격 -->
+                        <li class="li_info">별점: {{mask_data_list[0][2]}}</li>  <!-- 별점 -->
+                        <li class="li_info"><a href="#">구매링크</a></li>  <!-- 구매링크 mask_data_list[0][3]-->
                     </ul>
                     <a href="#" id='btn_zzim' class='btn'>찜</a>
                     {% if user_id != None %}
@@ -123,14 +123,14 @@
                 </ul>
             </div>
             <div class="review_set">
-                {% for r in review_list %}  <!-- review_list 받아와서 데이터 입력하기 -->
+                {% for r in range(review_list|length) %}  <!-- review_list: pk_id, mask_id, user_id, star_rating, review_text, option1, option2, option3, option4, img -->
                 <div class="review">
-                    <div class="review_left">그림</div>
+                    <div class="review_left"><img src= "data:image/png;base64, {{ img_data[r] }}"/></div>
                     <div class="review_right">
-                        <div class="star_rating">별점
+                        <div class="star_rating">{{ review_list[r][3] }}
                             <div class='star_image'>별이미지</div>
                         </div>
-                        <div class="review_content">내용</div> <!-- 리뷰 항목에 따로 지정할 수 있는 항목 ex)착용감, 크기, 숨쉬기 편한 정도 등의 항목 세울 수 있음 -->
+                        <div class="review_content">{{ review_list[r][4] }}</div> <!-- 리뷰 항목에 따로 지정할 수 있는 항목 ex)착용감, 크기, 숨쉬기 편한 정도 등의 항목 세울 수 있음 -->
                     </div>
                 </div>
                 {% endfor %}
