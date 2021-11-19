@@ -5,7 +5,7 @@ from db_connect import db, buffer,engine
 import cgi
 
 #이미지 데이터베이스에 저장
-from models import images
+from models import review
 import base64
 import pandas as pd
 from PIL import Image
@@ -21,28 +21,38 @@ app.config['SESSION_TYPE'] = 'filesystem'
 db.init_app(app)
 
 @app.route("/",methods=["GET","POST"])
-def review():
+def reviews():
     if request.method == 'POST':
-        pic = request.files['pic']
-        if not pic:
-            return "업로드 되지 않았습니다"
+        
+        tmp_img_data = request.files['img_data']
 
-        im= Image.open(pic)
+        im= Image.open(tmp_img_data)
         im.save(buffer,format='png')
-        img_str = base64.b64encode(buffer.getvalue())
-        img_df = pd.DataFrame({'image_data':[img_str]})
-        img_df.to_sql('images',con=engine,if_exists='append',index=False)
+        img_data = base64.b64encode(buffer.getvalue())
 
-        return redirect(url_for('review'))
+        user_id = request.form['user_id']
+        goods_id = request.form['goods_id']
+        star = request.form['star']
+        r_data = request.form['r_data']
+        r_op1 = request.form['r_op1']
+        r_op2 = request.form['r_op2']
+        r_op3 = request.form['r_op3']
+        r_op4 = request.form['r_op4']
+
+        member = review(user_id,goods_id,star,r_data,r_op1,r_op2,r_op3,r_op4,img_data )
+        db.session.add(member)
+        db.session.commit()
+        return redirect(url_for('reviews'))
     else:
+        #아래 코드는 이미지를 잘 갖고 오는지 테스트하는 코드 
         img=[]
-        show = images.query.all()
-        img_df = pd.read_sql(sql='SELECT * FROM images',con=engine)
+        show = review.query.all()
+        img_df = pd.read_sql(sql='SELECT * FROM review',con=engine)
         for i in range(len(show)):
-            img_str = img_df['image_data'].values[i]
+            img_str = img_df['img_data'].values[i]
             stage2 = img_str.decode('utf-8')
             img.append(stage2)
-        return render_template('Mlist.html',show=img)
+        return render_template('Mlist.html',show=img,text = show)
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1',port=5000, debug=True)
