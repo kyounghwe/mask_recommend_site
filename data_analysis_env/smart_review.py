@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 
+
 # 콤마 제거 및 정수형 변환
 
 driver_path = r'C:\Users\chromedriver.exe'
@@ -25,7 +26,7 @@ with webdriver.Chrome(driver_path) as driver:
         action = ActionChains(driver)
         action.move_to_element(some_tag).perform()
 
-        for x in range(1, 2):
+        for x in range(4, 5):
             # x번째 마스크로 스크롤
             end_xpath = f'//*[@id="__next"]/div/div[2]/div[2]/div[3]/div[1]/ul/div/div[{x}]/li/div[1]/div[2]/div[5]'
             some_tag = driver.find_element_by_xpath(end_xpath)
@@ -42,11 +43,12 @@ with webdriver.Chrome(driver_path) as driver:
             with webdriver.Chrome(driver_path) as dv:
                 dv.get('{}'.format(name_url))
                 dv.implicitly_wait(5)
-                curren_url = dv.current_url
+                redirect_url = dv.current_url
 
-                if 'shopping' in curren_url:
+                if 'shopping' in redirect_url:
                     pass
-                elif "smart" in curren_url:
+
+                elif "smartstore" in redirect_url:
                     # 리뷰
                     mask_review_page_xpath = dv.find_element_by_xpath(
                         '//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div')
@@ -82,7 +84,6 @@ with webdriver.Chrome(driver_path) as driver:
                                         mask_review_xpath).text
                                     mask_review_list.append(
                                         mask_review.replace("\n", ""))
-                                    # mask_review_list.append(mask_review.strip("\n"))
                                     review_num += 1
                                 except:
                                     break
