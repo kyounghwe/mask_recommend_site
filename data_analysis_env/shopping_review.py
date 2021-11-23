@@ -78,8 +78,9 @@ with webdriver.Chrome(driver_path) as driver:
                                     except:
                                         break
 
-                                if dv.find_element_by_xpath('//*[@id="section_review"]/div[3]/a[{}]'.format(review_page)).text != 11:
-                                    review_page += 1
+                                review_page += 1
+
+                                if dv.find_element_by_xpath('//*[@id="section_review"]/div[3]/a[{}]'.format(review_page)).text.replace('현재 페이지\n', '') != '11':
                                     current_page = dv.find_element_by_xpath(
                                         '//*[@id="section_review"]/div[3]/a[{}]'.format(review_page))
                                     current_page.click()
@@ -115,19 +116,19 @@ with webdriver.Chrome(driver_path) as driver:
                                     except:
                                         break
                                 try:
-                                    if dv.find_element_by_xpath('//*[@id="section_review"]/div[3]/a[{}]'.format(review_page)).text != 12:
-                                        if dv.find_element_by_xpath('//*[@id="section_review"]/div[3]/a[{}]'.format(review_page)).text == 30:
-                                            break
-                                        else:
-                                            review_page += 1
-                                            current_page = dv.find_element_by_xpath(
-                                                '//*[@id="section_review"]/div[3]/a[{}]'.format(review_page))
-                                            current_page.click()
-                                            review_num = 1
-                                            action = ActionChains(dv)
-                                            action.move_to_element(
-                                                mask_review_page_xpath).perform()
-                                            dv.implicitly_wait(5)
+                                    review_page += 1
+                                    if review_page != 12:
+                                        current_page = dv.find_element_by_xpath(
+                                            '//*[@id="section_review"]/div[3]/a[{}]'.format(review_page))
+                                        current_page.click()
+                                        review_num = 1
+                                        action = ActionChains(dv)
+                                        action.move_to_element(
+                                            mask_review_page_xpath).perform()
+                                        dv.implicitly_wait(5)
+
+                                    elif review_page == 12 and dv.find_element_by_xpath('//*[@id="section_review"]/div[3]/a[11]').text.replace('현재 페이지\n', '') == '30':
+                                        break
                                     else:
                                         next_page = dv.find_element_by_xpath(
                                             '//*[@id="section_review"]/div[3]/a[12]')
@@ -161,10 +162,11 @@ with webdriver.Chrome(driver_path) as driver:
                                         review_num += 1
                                     except:
                                         break
-                                if review_page == page_num[-1]:
+
+                                review_page += 1
+                                if review_page > int(page_num[-1]):
                                     break
                                 else:
-                                    review_page += 1
                                     current_page = dv.find_element_by_xpath(
                                         '//*[@id="section_review"]/div[3]/a[{}]'.format(review_page))
                                     current_page.click()
