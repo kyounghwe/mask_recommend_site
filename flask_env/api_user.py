@@ -8,15 +8,64 @@ from read_mysql import read_mask_data
 from read_mysql_select import select_category
 
 user = Blueprint('user', __name__)
-mask_list = None
+
 # 메인 페이지
-@user.route('/')
+@user.route('/', methods=["GET", "POST"])
 def home():
     # 로그인 여부 확인
     if not session.get('logged_in'): check = 0
     else: check = 1  # 로그인 된 신호를 프론트에 줘야 함 -> 로그인 해야 리뷰, 별점, 찜 등의 기능 이용 가능
     
-    mask_list = read_mask_data()
+    # 카테고리 선택 초기화
+    reset = request.args.get("reset")
+    if reset:
+        session["mask_category"] = None
+        session["mask_blocking_grade"] = None
+        session["mask_function"] = None
+        session["mask_price"] = None
+    
+    # 카테고리 선택 -> 세션에 저장
+    if request.method == "POST":
+        session["mask_category"] = request.form.get('mask_category')
+        session["mask_blocking_grade"] = request.form.get('mask_blocking_grade')
+        mask_function_list = []
+        for i in range(1, 9):
+            mask_function_list.append(request.form.get(f'mask_function_{i}'))
+        if mask_function_list == [None, None, None, None, None, None, None, None]:
+            session["mask_function"] = None
+        else:
+            session["mask_function"] = mask_function_list
+        try:
+            session["mask_price"] = list(map(int, request.form.get('mask_price').split(":")))
+        except:
+            session["mask_price"] = None
+        
+    # 선택한 카테고리가 있는 경우
+    if session.get('mask_category') or session.get('mask_blocking_grade') or session.get('mask_function') or session.get('mask_price'):
+        checked_list = [session["mask_category"], session["mask_blocking_grade"],session["mask_function"],session["mask_price"]]
+        mask_list = select_category(checked_list)
+
+        checked_list_for_html = []
+        for i in checked_list:
+            if not i:
+                continue
+            if type(i) is list:
+                for j in i:
+                    checked_list_for_html.append(j)
+            else:
+                checked_list_for_html.append(i)
+        if session["mask_price"] != None:
+            if checked_list_for_html[-1] == 999999999:
+                temp = "20000원 이상"
+            else:
+                temp = " ~ ".join(list(map(str, checked_list_for_html[-2:]))) + '원'
+            checked_list_for_html = checked_list_for_html[:-2]
+            checked_list_for_html.append(temp)
+
+    else:  # 없는 경우
+        checked_list = None
+        checked_list_for_html = None
+        mask_list = read_mask_data()
     
     # 페이징
     page = request.args.get('page')
@@ -30,42 +79,8 @@ def home():
         session['page_num'] = 0
     mask_list = mask_list[session['page_num']*16:session['page_num']*16 + 16]
     
-    return render_template("main.html", check=check, mask_list=mask_list, page_num=session['page_num'])  # 로그인 상태 메인페이지
-
-@user.route('/', methods=["POST"])
-def category():
-    # 카테고리 선택하여 검색하는 경우
-    if request.method == "POST":
-        mask_category = request.form.get('mask_category')
-        # mask_blocking_grade = request.form.get('mask_blocking_grade')
-        # mask_function_1 = request.form.get('mask_function_1')
-        # mask_function_2 = request.form.get('mask_function_2')
-        # mask_function_3 = request.form.get('mask_function_3')
-        # mask_function_4 = request.form.get('mask_function_4')
-        # mask_function_5 = request.form.get('mask_function_5')
-        # mask_function_6 = request.form.get('mask_function_6')
-        # mask_function_7 = request.form.get('mask_function_7')
-        # mask_function_8 = request.form.get('mask_function_8')
-        # mask_price = request.form.get('mask_price')
-        # category_list = [mask_category, mask_blocking_grade, mask_function_1, mask_function_2, mask_function_3, mask_function_4, mask_function_5, mask_function_6, mask_function_7, mask_function_8, mask_price]
-
-        ###
-        mask_list = select_category(mask_category)
-        # 페이징
-        # page = request.args.get('page')
-        # if page != None:
-        #     page = int(page)
-        #     if session['page_num'] - page == 1 and session['page_num'] > 0:  # prev페이지로 갈 때
-        #         session['page_num'] -= 1
-        #     elif session['page_num'] - page == -1 and session['page_num'] < len(mask_list)//16:  # next페이지로 갈 때
-        #         session['page_num'] += 1
-        # else:
-        #     session['page_num'] = 0
-        # mask_list = mask_list[session['page_num']*16:session['page_num']*16 + 16]
-        ###
-
-        # return render_template('main.html', check=check, mask_list=mask_list, page_num=session['page_num'])
-        return redirect(url_for('user.home'))
+    print("세션세션세션세션: ",session["mask_category"])
+    return render_template("main.html", check=check, mask_list=mask_list, page_num=session['page_num'], checked_list=checked_list_for_html)  # 로그인 상태 메인페이지
 
 # 회원가입 페이지
 ### 아이디와 비밀번호 조건 추가해야 함 -> 조건에 맞지 않으면 alert

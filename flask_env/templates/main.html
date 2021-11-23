@@ -7,6 +7,7 @@
             ul, li {list-style:none;padding:0;margin:0;}
             a {text-decoration:none;color:inherit;}
             div{padding:0;margin:0;}
+            button{background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer}
             .wrap {
                 width: 1080px;
                 margin: 0 auto;
@@ -44,21 +45,45 @@
             nav ul {
                 margin: 10px;
                 padding-top: 10px;
-                background-color: red;;
+                /* background-color: red;; */
             }
             nav ul li {
-                background-color: yellow;
+                background-color:rgb(255,255,255,40%);
                 margin-bottom: 5px;
                 font-size: 18px;
                 font-weight: bold;
             }
             nav ul li > span:first-child {
-                font-size: 25px;
+                font-size: 20px;
                 display: inline-block;
-                width: 120px;
-                background-color: pink;
+                width: 120px; height: 30px; line-height: 30px;
+                background-color: rgb(255,255,255,30%);
             }
-
+            #submit_btn {
+                width: 120px; height: 30px; background-color: white; 
+                margin-left: 950px;margin-bottom: 10px;
+                font-weight: bold; font-size: 16px;
+                border-radius: 10px;
+            }
+            .category_name{
+                padding-left: 10px;
+            }
+            .checked_category p {
+                width: 140px;
+                height: 30px; line-height: 30px;
+                float: left;
+                border-radius: 10px;
+                margin-right: 10px;
+                background-color: rgb(47, 150, 209);
+                color: white; font-weight: bold; text-align: center;
+            }
+            .checked_category a {
+                display: inline-block;
+                margin-top: 15px; border-radius: 10px;
+                width: 140px; height: 30px; line-height: 30px;
+                background-color:rgb(153, 153, 153); color: white; font-weight: bold;
+                text-align: center;
+            }
 
             section {
                 margin-top: 50px; margin-bottom: 50px;
@@ -158,7 +183,7 @@
                 </div>
             </header>
             <nav>
-                <form action="/" method="POST">
+                <form action="/" method="POST" id='form1'>
                     <ul>
                         <li>
                             <span class="category_name">카테고리</span>
@@ -196,14 +221,26 @@
                                 1000 ~ 2000원<input type="radio" name="mask_price" value="1000:2000">
                                 2000 ~ 5000원<input type="radio" name="mask_price" value="2000:5000">
                                 5000 ~ 10000원<input type="radio" name="mask_price" value="5000:10000">
-                                10000원 ~ 20000원<input type="radio" name="occupation" value="10000:20000">
-                                20000원 ~ <input type="radio" name="occupation" value="20000:999999999">
+                                10000원 ~ 20000원<input type="radio" name="mask_price" value="10000:20000">
+                                20000원 ~ <input type="radio" name="mask_price" value="20000:999999999">
                             </span>
                         </li>
                     </ul>
-                    <button type="submit">적용</button>
+                    <button id="submit_btn" type="submit">적용</button>
                 </form>
             </nav>
+            <form action="/" method="POST" id="form2">
+                <div class="checked_category">
+                    {% if checked_list != None %}
+                        {% for i in range(checked_list|length) %}
+                        {% if checked_list[i] != None %}
+                            <p>{{ checked_list[i] }}</p>
+                        {% endif %}
+                        {% endfor %}
+                        <a href="/?reset=True">검색 초기화</a>
+                    {% endif %}
+                </div>
+            </form>
             <section>
                 <article>
                     <!--  -->
@@ -221,7 +258,6 @@
                         {% endfor %}
                     </div>
                     {% else %}
-                    <!-- <button>다음</button> -->
                     <div class="article_box"> <!--mask_name, mask_price, star_rating, mask_url, pk_id-->
                         {% for j in range((mask_list|length//16)*16, (mask_list|length//16)*16 + mask_list|length%16) %}
                         <ul id="mask_box">
@@ -246,4 +282,3 @@
         </div>
     </body>
 </html>
-
