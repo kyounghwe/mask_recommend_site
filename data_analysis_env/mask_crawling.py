@@ -13,12 +13,19 @@ options = webdriver.ChromeOptions()
 # 창 숨기는 옵션 추가
 options.add_argument("headless")
 
+# 옵션 생성
+options = webdriver.ChromeOptions()
+# 창 숨기는 옵션 추가
+options.add_argument("headless")
+
 # 콤마 제거 및 정수형 변환
+
+
 def cleaner(something):
     return int(something.replace(',', ''))
 
 def mask_crawling(start, end, page):
-    with webdriver.Chrome(driver_path) as driver:
+    with webdriver.Chrome(driver_path, options=options) as driver:
         # pagingIndex를 통해 크룰링 할 페이지 수 설정 (start, end+1)
         for i in range(start, end+1):
             driver.get(
@@ -45,7 +52,7 @@ def mask_crawling(start, end, page):
                 action.move_to_element(some_tag).perform()
 
                 # 마스크 이미지 로딩 대기
-                driver.implicitly_wait(5)
+                driver.implicitly_wait(10)
 
                 # 마스크 이름
                 name_xpath = f'//*[@id="__next"]/div/div[2]/div[2]/div[3]/div[1]/ul/div/div[{x}]/li/div[1]/div[2]/div[1]'
@@ -79,9 +86,9 @@ def mask_crawling(start, end, page):
 
                 # 마스크 이름으로부터 리디렉션되는 링크를 열고, 주소를 확인하여 가격비교와 네이버스토어 제품을 구분
                 # .current.url 의 경우 해당 driver가 접속한 url을 가져옴
-                with webdriver.Chrome(driver_path) as dv:
+                with webdriver.Chrome(driver_path, options=options) as dv:
                     dv.get('{}'.format(name_url))
-                    dv.implicitly_wait(5)
+                    dv.implicitly_wait(10)
                     redirect_url = dv.current_url
 
                 # shopping인 경우, 최저가 링크, 이미지, 마스크 기능, 차단지수
