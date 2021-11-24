@@ -20,7 +20,7 @@ def cleaner(something):
 
 
 def mask_crawling(start, end, page):
-    with webdriver.Chrome(driver_path, options=options) as driver:
+    with webdriver.Chrome(driver_path) as driver:
         # pagingIndex를 통해 크룰링 할 페이지 수 설정 (start, end+1)
         for i in range(start, end+1):
             driver.get(
@@ -75,13 +75,16 @@ def mask_crawling(start, end, page):
                 # 마스크 기능 리스트
                 main_func = []
 
+                # 리뷰 리스트
+                mask_review_list = []
+
                 # 마스크 이름을 기반으로 링크 정보 가져오기
                 name_url = driver.find_element_by_xpath(
                     name_xpath).find_element_by_tag_name('a').get_attribute('href')
 
                 # 마스크 이름으로부터 리디렉션되는 링크를 열고, 주소를 확인하여 가격비교와 네이버스토어 제품을 구분
                 # .current.url 의 경우 해당 driver가 접속한 url을 가져옴
-                with webdriver.Chrome(driver_path, options=options) as dv:
+                with webdriver.Chrome(driver_path) as dv:
                     dv.get('{}'.format(name_url))
                     dv.implicitly_wait(10)
                     redirect_url = dv.current_url
@@ -145,7 +148,13 @@ def mask_crawling(start, end, page):
                         except:
                             main_func = None
 
-                        mask_review_list = []
+                        # 리뷰 끝까지 스크롤
+                        mask_review_end_xpath = dv.find_element_by_xpath(
+                            '//*[@id="section_recommend"]/h3')
+                        action = ActionChains(dv)
+                        action.move_to_element(mask_review_end_xpath).perform()
+                        dv.implicitly_wait(2)
+
                         # 리뷰 있을 때
                         try:
                             # 1~10 페이지 문자 가져오기
@@ -182,6 +191,7 @@ def mask_crawling(start, end, page):
                                         current_page = dv.find_element_by_xpath(
                                             '//*[@id="section_review"]/div[3]/a[{}]'.format(review_page))
                                         current_page.click()
+                                        dv.implicitly_wait(2)
                                         review_num = 1
                                         action = ActionChains(dv)
                                         action.move_to_element(
@@ -194,6 +204,7 @@ def mask_crawling(start, end, page):
                                 next_page = dv.find_element_by_xpath(
                                     '//*[@id="section_review"]/div[3]/a[11]')
                                 next_page.click()
+                                dv.implicitly_wait(2)
                                 action = ActionChains(dv)
                                 action.move_to_element(
                                     mask_review_page_xpath).perform()
@@ -348,7 +359,20 @@ def mask_crawling(start, end, page):
                             else:
                                 review_number = 0
 
+                            # 리뷰
                             mask_review_list = []
+
+                            mask_review_end_xpath = dv.find_element_by_xpath(
+                                '//*[@id="QNA"]/div/h3')
+
+                            mask_review_page_xpath = dv.find_element_by_xpath(
+                                '//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div')
+
+                            # 해당 위치로 스크롤
+                            action = ActionChains(dv)
+                            action.move_to_element(
+                                mask_review_end_xpath).perform()
+                            dv.implicitly_wait(5)
 
                             # 리뷰가 있을 때
                             try:
@@ -407,6 +431,7 @@ def mask_crawling(start, end, page):
                             main_func = None
                             star_rating = float(0)
                             review_number = 0
+                            mask_review_list = None
                     else:
                         review_number = 0
                         star_rating = 0.0
@@ -457,4 +482,4 @@ def mask_crawling(start, end, page):
                             encoding='utf-8-sig', header=False)
 
 
-mask_crawling(1, 1, 60)
+mask_crawling(1, 1, 10)
