@@ -439,13 +439,15 @@ def mask_crawling(start, end, page):
                     protect_factor = None
                     func_result = None
 
+                mask_review = mask_review_list
+
                 result = [mask_name, review_number,
-                          star_rating, price, category, protect_factor, func_result, img_url, purchase_link]
+                          star_rating, price, category, protect_factor, func_result, img_url, purchase_link, mask_review]
                 mask.append(result)
 
             # DataFrame 변환 후 CSV Export
             data = pd.DataFrame(
-                mask, columns=['Name', 'Review', 'Rating', 'Price', 'Category', 'Protect_factor', 'Mask_func', 'Mask_img', 'Purchase_link'])
+                mask, columns=['Name', 'Review', 'Rating', 'Price', 'Category', 'Protect_factor', 'Mask_func', 'Mask_img', 'Purchase_link', 'Mask_reivew'])
             # 경로에 파일이 존재하는 경우 append, 존재하지 않는 경우 write mode 사용
             if not os.path.exists('mask_data.csv'):
                 data.to_csv('mask_data.csv', index=False,
