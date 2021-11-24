@@ -80,7 +80,7 @@ with webdriver.Chrome(driver_path) as driver:
 
                                 review_page += 1
 
-                                if dv.find_element_by_xpath('//*[@id="section_review"]/div[3]/a[{}]'.format(review_page)).text.replace('현재 페이지\n', '') != '11':
+                                if review_page != 11:
                                     current_page = dv.find_element_by_xpath(
                                         '//*[@id="section_review"]/div[3]/a[{}]'.format(review_page))
                                     current_page.click()
@@ -162,7 +162,6 @@ with webdriver.Chrome(driver_path) as driver:
                                         review_num += 1
                                     except:
                                         break
-
                                 review_page += 1
                                 if review_page > int(page_num[-1]):
                                     break
