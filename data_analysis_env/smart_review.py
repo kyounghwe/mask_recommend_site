@@ -26,7 +26,7 @@ with webdriver.Chrome(driver_path) as driver:
         action = ActionChains(driver)
         action.move_to_element(some_tag).perform()
 
-        for x in range(4, 5):
+        for x in range(1, 5):
             # x번째 마스크로 스크롤
             end_xpath = f'//*[@id="__next"]/div/div[2]/div[2]/div[3]/div[1]/ul/div/div[{x}]/li/div[1]/div[2]/div[5]'
             some_tag = driver.find_element_by_xpath(end_xpath)
@@ -50,32 +50,28 @@ with webdriver.Chrome(driver_path) as driver:
 
                 elif "smartstore" in redirect_url:
                     # 리뷰
+                    mask_review_end_xpath = dv.find_element_by_xpath(
+                        '//*[@id="QNA"]/div/h3')
+
                     mask_review_page_xpath = dv.find_element_by_xpath(
                         '//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div')
 
                     # 해당 위치로 스크롤
                     action = ActionChains(dv)
                     action.move_to_element(
-                        mask_review_page_xpath).perform()
+                        mask_review_end_xpath).perform()
                     dv.implicitly_wait(5)
 
                     mask_review_list = []
-                    review_page = 2
-                    while True:
-                        review_num = 1
+
+                    # 리뷰가 있을 때
+                    try:
+                        # review_page: 리뷰 page의 a태그 index  (1page=2, 2page=3,..., 10page=11, 이전버튼=1, 다음버튼=12)
+                        review_page = 2
+                        # 리뷰 크롤링 시작
                         while True:
-                            try:
-                                mask_review_xpath = f'//*[@id="REVIEW"]/div/div[3]/div/div[2]/ul/li[{review_num}]/div/div/div/div[1]/div/div[1]/div[2]/div'
-                                mask_review = dv.find_element_by_xpath(
-                                    mask_review_xpath).text
-                                mask_review_list.append(
-                                    mask_review.replace("\n", ""))
-                                review_num += 1
-                            except:
-                                break
-                        if int(dv.find_element_by_xpath('//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div/a[11]').text) % 10 == 0:
-                            if int(dv.find_element_by_xpath('//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div/a[11]').text) == 30:
-                                break
+                            # review_num: 리뷰의 li태그 index
+                            review_num = 1
 
                             while True:
                                 try:
@@ -87,24 +83,39 @@ with webdriver.Chrome(driver_path) as driver:
                                     review_num += 1
                                 except:
                                     break
-                            next_page = dv.find_element_by_xpath(
-                                '//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div/a[12]')
-                            next_page.click()
-                            review_num = 1
-                            review_page = 2
 
-                        else:
+                            # 크롤링을 원하는 페이지까지 도달할때까지 반복, 페이지의 수가 원하는 페이지의 수 미만이라면 break
                             try:
                                 review_page += 1
-                                current_page = dv.find_element_by_xpath(
-                                    '//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div/a[{}]'.format(review_page))
-                                current_page.click()
-                                review_num = 1
-                                action = ActionChains(dv)
-                                action.move_to_element(
-                                    mask_review_page_xpath).perform()
-                                dv.implicitly_wait(5)
+                                if review_page != 12:
+                                    current_page = dv.find_element_by_xpath(
+                                        '//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div/a[{}]'.format(review_page))
+                                    current_page.click()
+                                    review_num = 1
+                                    action = ActionChains(dv)
+                                    action.move_to_element(
+                                        mask_review_page_xpath).perform()
+                                    dv.implicitly_wait(5)
+
+                                # 크롤링 원하는 페이지 지정
+                                elif review_page == 12 and dv.find_element_by_xpath('//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div/a[11]').text.replace('현재 페이지\n', '') == '30':
+                                    break
+
+                                # 다음 버튼 클릭
+                                else:
+                                    next_page = dv.find_element_by_xpath(
+                                        '//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div/a[12]')
+                                    next_page.click()
+                                    action = ActionChains(dv)
+                                    action.move_to_element(
+                                        mask_review_page_xpath).perform()
+                                    review_page = 2
+                                    dv.implicitly_wait(5)
                             except:
                                 break
+                    # 리뷰가 없을 때
+                    except:
+                        mask_review_list = None
+
                 else:
                     pass
