@@ -55,17 +55,23 @@ with webdriver.Chrome(driver_path) as driver:
 
                     mask_review_list = []
 
+                    # 리뷰 있을 때
                     try:
+                        # 1~10 페이지 문자 가져오기
                         mask_review_page_xpath = dv.find_element_by_xpath(
                             '//*[@id="section_review"]/div[3]')
                         page_num = mask_review_page_xpath.text
                         page_num = page_num.replace('현재 페이지', '')
                         page_num = page_num.replace('다음', '')
 
+                        # 다음 버튼이 있을 경우
                         if dv.find_element_by_xpath('//*[@id="section_review"]/div[3]/a[11]').text == '다음':
                             # 1~10 page 까지 크롤링
+                            # review_page(1~10page): 리뷰 page의 a태그 index  (1page=1, 2page=2,..., 10page=10, 다음버튼=11)
+                            # review_page(11page~): 리뷰 page의 a태그 index  (1page=2, 2page=3,..., 10page=11, 이전버튼=1, 다음버튼=12)
                             review_page = 1
                             while True:
+                                # review_num: 리뷰의 li태그 index
                                 review_num = 1
                                 while True:
                                     try:
@@ -80,6 +86,7 @@ with webdriver.Chrome(driver_path) as driver:
 
                                 review_page += 1
 
+                                # 1~10page 넘기면서 크롤링 반복 후 다음 버튼이 나오면 break
                                 if review_page != 11:
                                     current_page = dv.find_element_by_xpath(
                                         '//*[@id="section_review"]/div[3]/a[{}]'.format(review_page))
@@ -101,10 +108,11 @@ with webdriver.Chrome(driver_path) as driver:
                                 mask_review_page_xpath).perform()
                             dv.implicitly_wait(5)
 
-                            # 11page부터 페이지 하나씩 넘기면서 크롤링, 다음 버튼 없으면 break
+                            # 11page부터 크롤링 원하는 페이지까지 도달 할 때까지 반복, 페이지의 수가 원하는 페이지의 수 미만이라면 break
                             review_page = 2
                             while True:
                                 review_num = 1
+                                # 크롤링을 원하는 페이지까지 도달할때까지 반복, 페이지의 수가 원하는 페이지의 수 미만이라면 break
                                 while True:
                                     try:
                                         mask_review_xpath = f'//*[@id="section_review"]/ul/li[{review_num}]/div[2]/div[1]/p'
@@ -127,6 +135,7 @@ with webdriver.Chrome(driver_path) as driver:
                                             mask_review_page_xpath).perform()
                                         dv.implicitly_wait(5)
 
+                                    # 크롤링 원하는 페이지 지정
                                     elif review_page == 12 and dv.find_element_by_xpath('//*[@id="section_review"]/div[3]/a[11]').text.replace('현재 페이지\n', '') == '30':
                                         break
                                     else:
