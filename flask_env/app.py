@@ -14,7 +14,7 @@ from api_goods import goods
 from api_user_page import user_page
 import cgi
 
-form = cgi.FieldStorage()
+# form = cgi.FieldStorage()
 
 app = Flask(__name__)
 db.init_app(app)
@@ -23,7 +23,7 @@ db.init_app(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:5452tulahyo12!A@localhost:3306/try_mysql'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'the random string'  # session 실행하려면 시크릿키 필요!
-app.config['SESSION_TYPE'] = 'filesystem'
+# app.config['SESSION_TYPE'] = 'filesystem'
 
 app.register_blueprint(user)
 app.register_blueprint(goods)
