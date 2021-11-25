@@ -184,7 +184,8 @@
                 </div>
             </header>
             <nav>
-                <form action="/" method="POST" id='form1' onsubmit="storeData">
+                <!-- <form action="/" method="POST" id='form1' onsubmit="storeData()"> -->
+                <form method="POST" id='form1'>
                     <ul>
                         <li>
                             <span class="category_name">카테고리</span>
@@ -205,22 +206,14 @@
                         <li>
                             <span class="category_name">기능</span>
                             <span class="category_list">
-                                미세먼지필터<input type="checkbox" name="mask_function" value="미세먼지필터">
-                                저자극<input type="checkbox" name="mask_function" value="저자극">
-                                일회용<input type="checkbox" name="mask_function" value="일회용">
-                                접이식<input type="checkbox" name="mask_function" value="접이식">
-                                자외선차단<input type="checkbox" name="mask_function" value="자외선차단">
-                                김서림방지<input type="checkbox" name="mask_function" value="김서림방지">
-                                방수<input type="checkbox" name="mask_function" value ="방수">
-                                방한<input type="checkbox" name="mask_function" value="방한">
-                                <!-- 미세먼지필터<input type="checkbox" name="mask_function_1" value="미세먼지필터">
+                                미세먼지필터<input type="checkbox" name="mask_function_1" value="미세먼지필터">
                                 저자극<input type="checkbox" name="mask_function_2" value="저자극">
                                 일회용<input type="checkbox" name="mask_function_3" value="일회용">
                                 접이식<input type="checkbox" name="mask_function_4" value="접이식">
                                 자외선차단<input type="checkbox" name="mask_function_5" value="자외선차단">
                                 김서림방지<input type="checkbox" name="mask_function_6" value="김서림방지">
                                 방수<input type="checkbox" name="mask_function_7" value ="방수">
-                                방한<input type="checkbox" name="mask_function_8" value="방한"> -->
+                                방한<input type="checkbox" name="mask_function_8" value="방한">
                             </span>
                         </li>
                         <li>
@@ -235,7 +228,7 @@
                             </span>
                         </li>
                     </ul>
-                    <button id="submit_btn" type="submit">적용</button>
+                    <button id="submit_btn" type="button" onClick="storeData()">적용</button>
                 </form>
             </nav>
             <form action="/" method="POST" id="form2">
@@ -246,7 +239,7 @@
                             <p>{{ checked_list[i] }}</p>
                         {% endif %}
                         {% endfor %}
-                        <a href="/?reset=True">검색 초기화</a>
+                        <a href="/" onclick="category_reset();">검색 초기화</a>
                     {% endif %}
                 </div>
             </form>
@@ -291,28 +284,121 @@
         </div>
     </body>
 </html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     // myStorage = window.localStorage;
     // localStorage.setItem("key", value);
     // localStorage.getItem("key");
     // localStorage.removeItem("key");
     // localStorage.clear();
-    document.getElementById('submit_btn').onclick = function storeData(){
-        localStorage.setItem("mask_category", document.querySelector('input[name="mask_category"]:checked').value);
-        localStorage.setItem("mask_blocking_grade", document.querySelector('input[name="mask_blocking_grade"]:checked').value);
-        if (document.querySelector('input[name="mask_function"]:checked').value == False) {
-            localStorage.setItem("mask_function", None);
-        } else {
-            localStorage.setItem("mask_function", document.querySelector('input[name="mask_function"]:checked').value);
+    // document.getElementById('submit_btn').onclick = function storeData(){
+    function storeData(){
+        try {
+            localStorage.setItem("mask_category", document.querySelector('input[name="mask_category"]:checked').value);
+        } catch(err){
+            localStorage.setItem("mask_category", 'None');
         }
-        
-        // localStorage.setItem("mask_function_2", document.querySelector('input[name="mask_function_2"]:checked').value);
-        // localStorage.setItem("mask_function_3", document.querySelector('input[name="mask_function_3"]:checked').value);
-        // localStorage.setItem("mask_function_4", document.querySelector('input[name="mask_function_4"]:checked').value);
-        // localStorage.setItem("mask_function_5", document.querySelector('input[name="mask_function_5"]:checked').value);
-        // localStorage.setItem("mask_function_6", document.querySelector('input[name="mask_function_6"]:checked').value);
-        // localStorage.setItem("mask_function_7", document.querySelector('input[name="mask_function_7"]:checked').value);
-        // localStorage.setItem("mask_function_8", document.querySelector('input[name="mask_function_8"]:checked').value);
-        localStorage.setItem("mask_price", document.querySelector('input[name="mask_price"]:checked').value);
+        try {
+            localStorage.setItem("mask_blocking_grade", document.querySelector('input[name="mask_blocking_grade"]:checked').value);
+        } catch(err){
+            localStorage.setItem("mask_blocking_grade", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_1"]').checked) {
+            localStorage.setItem("mask_function_1", document.querySelector('input[name="mask_function_1"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_1", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_2"]').checked) {
+            localStorage.setItem("mask_function_2", document.querySelector('input[name="mask_function_2"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_2", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_3"]').checked) {
+            localStorage.setItem("mask_function_3", document.querySelector('input[name="mask_function_3"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_3", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_4"]').checked) {
+            localStorage.setItem("mask_function_4", document.querySelector('input[name="mask_function_4"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_4", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_5"]').checked) {
+            localStorage.setItem("mask_function_5", document.querySelector('input[name="mask_function_5"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_5", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_6"]').checked) {
+            localStorage.setItem("mask_function_6", document.querySelector('input[name="mask_function_6"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_6", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_7"]').checked) {
+            localStorage.setItem("mask_function_7", document.querySelector('input[name="mask_function_7"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_7", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_8"]').checked) {
+            localStorage.setItem("mask_function_8", document.querySelector('input[name="mask_function_8"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_8", 'None');
+        }
+        try {
+            localStorage.setItem("mask_price", document.querySelector('input[name="mask_price"]:checked').value);
+        } catch(err){
+            localStorage.setItem("mask_price", 'None');
+        }
+        post_category();
+    }
+    function category_reset(){
+        localStorage.setItem("mask_category", 'None');
+        localStorage.setItem("mask_blocking_grade", 'None');
+        localStorage.setItem("mask_function_1", 'None');
+        localStorage.setItem("mask_function_2", 'None');
+        localStorage.setItem("mask_function_3", 'None');
+        localStorage.setItem("mask_function_4", 'None');
+        localStorage.setItem("mask_function_5", 'None');
+        localStorage.setItem("mask_function_6", 'None');
+        localStorage.setItem("mask_function_7", 'None');
+        localStorage.setItem("mask_function_8", 'None');
+        localStorage.setItem("mask_price", 'None');
+        post_category();
+    }
+    function post_category(){
+        var server_data = {
+            "mask_category": localStorage.getItem("mask_category"),
+            "mask_blocking_grade": localStorage.getItem("mask_blocking_grade"),
+            "mask_function": [
+                localStorage.getItem("mask_function_1"),
+                localStorage.getItem("mask_function_2"),
+                localStorage.getItem("mask_function_3"),
+                localStorage.getItem("mask_function_4"),
+                localStorage.getItem("mask_function_5"),
+                localStorage.getItem("mask_function_6"),
+                localStorage.getItem("mask_function_7"),
+                localStorage.getItem("mask_function_8")
+            ],
+            "mask_price": localStorage.getItem("mask_price")
+        }
+        $.ajax({
+            type: "POST",
+            url: "/",
+            data: JSON.stringify(server_data),
+            contentType: "application/json;charset=UTF-8",
+            dataType: 'json',
+            success: function(data){
+                document.write(data)
+            }
+            // success: function(){},
+            // data: json,
+            // success: function(response){
+            //     window.location.href = response.render_template
+            // }
+            // success:function(response){document.write(response);}
+            // 메인페이지의 각 부분을 바꾼다.
+            // main.html 내에서 바꾸고 싶은 엘리먼터
+            // success 부분에서 해당 데이터를 바꾼다.
+            // refresh
+        })
     }
 </script>
