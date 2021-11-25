@@ -13,11 +13,6 @@ options = webdriver.ChromeOptions()
 # 창 숨기는 옵션 추가
 options.add_argument("headless")
 
-# 옵션 생성
-options = webdriver.ChromeOptions()
-# 창 숨기는 옵션 추가
-options.add_argument("headless")
-
 # 콤마 제거 및 정수형 변환
 
 
