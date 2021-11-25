@@ -1,17 +1,13 @@
 from selenium import webdriver
 from selenium.webdriver import ActionChains
+
 import pandas as pd
 import os
-
+import re
+import emoji
 
 # 크롬 드라이버 경로
 driver_path = r'C:\Users\chromedriver'
-
-# 옵션 생성
-# 백그라운드 실행 시 각 크롬드라이버에 options=options 추가
-options = webdriver.ChromeOptions()
-# 창 숨기는 옵션 추가
-options.add_argument("headless")
 
 # 옵션 생성
 options = webdriver.ChromeOptions()
@@ -19,10 +15,18 @@ options = webdriver.ChromeOptions()
 options.add_argument("headless")
 
 # 콤마 제거 및 정수형 변환
-
-
 def cleaner(something):
     return int(something.replace(',', ''))
+
+# 리뷰 특수문자, 이모지 제거
+def cleanReview(review_list):
+    string = " ".join(review_list)
+
+    # 텍스트에 포함되어 있는 특수 문자 제거
+    text = re.sub('[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》]', '', string)
+    
+    # 텍스트에 포함되어 있는 이모지 제거 후 리턴
+    return emoji.get_emoji_regexp().sub(u'', text)
 
 def mask_crawling(start, end, page):
     with webdriver.Chrome(driver_path, options=options) as driver:
@@ -234,7 +238,7 @@ def mask_crawling(start, end, page):
                                             action.move_to_element(
                                                 mask_review_page_xpath).perform()
 
-                                        elif review_page == 12 and dv.find_element_by_xpath('//*[@id="section_review"]/div[3]/a[11]').text.replace('현재 페이지\n', '') == '30':
+                                        elif review_page == 12 and dv.find_element_by_xpath('//*[@id="section_review"]/div[3]/a[11]').text.replace('현재 페이지\n', '') == '20':
                                             break
 
                                         else:
@@ -402,7 +406,7 @@ def mask_crawling(start, end, page):
                                             mask_review_page_xpath).perform()
                                         
                                     # 크롤링 원하는 페이지 지정
-                                    elif review_page == 12 and dv.find_element_by_xpath('//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div/a[11]').text.replace('현재 페이지\n', '') == '30':
+                                    elif review_page == 12 and dv.find_element_by_xpath('//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div/a[11]').text.replace('현재 페이지\n', '') == '20':
                                         break
                                     # 다음 버튼 클릭
                                     else:
@@ -456,6 +460,9 @@ def mask_crawling(start, end, page):
                     protect_factor = None
                     func_result = None
 
+                if mask_review_list:
+                    mask_review_list = cleanReview(mask_review_list)
+
                 result = [mask_name, review_number,
                         star_rating, price, category, protect_factor, func_result, img_url, purchase_link, mask_review_list]
                 mask.append(result)
@@ -471,4 +478,4 @@ def mask_crawling(start, end, page):
                 data.to_csv('mask_data.csv', index=False, mode='a',
                             encoding='utf-8-sig', header=False)
 
-mask_crawling(1, 1, 2)
+mask_crawling(1, 1, 4)
