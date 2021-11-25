@@ -162,7 +162,7 @@ def mask_crawling(start, end, page):
                         action = ActionChains(dv)
                         action.move_to_element(mask_review_end_xpath).perform()
                         
-                        # 마스크 리뷰 리스트 생성 (추후 출력 방식 변경)
+                        # 마스크 리뷰 리스트 생성
                         mask_review_list = []
 
                         # 동작 환경에 맞추어 대기시간 설정 (implicitly_wait)
@@ -341,19 +341,15 @@ def mask_crawling(start, end, page):
                             else:
                                 review_number = 0
 
-                            # 마스크 기능
-                            mask_function_xpath = dv.find_element_by_xpath(
-                                '//*[@id="INTRODUCE"]/div/div[3]/div/div[2]/div/table/tbody/tr[2]/td[2]')
+                            # 마스크 기능 (해당 클래스 요소 중 2번째)
+                            function_class = dv.find_elements_by_class_name('_1_UiXWHt__')[1]
                             # 해당 위치로 스크롤
-                            action = ActionChains(dv)
-                            action.move_to_element(mask_function_xpath).perform()
                             dv.implicitly_wait(5)
-
-                            div_tag = dv.find_element_by_xpath(
-                                '//*[@id="INTRODUCE"]/div/div[3]/div/div[2]/div')
-                            func_span_list = div_tag.find_elements_by_tag_name(
+                            action = ActionChains(dv)
+                            action.move_to_element(function_class).perform()
+ 
+                            func_span_list = function_class.find_elements_by_tag_name(
                                 'td')
-                            func_span_list.pop(-1)
                                 
                             for func in func_span_list:
                                 if "1세" not in func.text and "2세" not in func.text and "3세" not in func.text and "4세" not in func.text and "5세" not in func.text and "6세" not in func.text:
@@ -466,6 +462,8 @@ def mask_crawling(start, end, page):
                 result = [mask_name, review_number,
                         star_rating, price, category, protect_factor, func_result, img_url, purchase_link, mask_review_list]
                 mask.append(result)
+                # 출력 테스트 코드
+                print(redirect_url, len(mask_review_list))
 
             # DataFrame 변환 후 CSV Export
             data = pd.DataFrame(
