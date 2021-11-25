@@ -10,6 +10,7 @@ import emoji
 driver_path = r'C:\Users\chromedriver'
 
 # 옵션 생성
+# 백그라운드 실행 시 각 크롬드라이버에 options=options 추가
 options = webdriver.ChromeOptions()
 # 창 숨기는 옵션 추가
 options.add_argument("headless")
