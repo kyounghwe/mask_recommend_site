@@ -308,36 +308,16 @@ def mask_crawling(start, end, page):
                                 except:
                                     mask_review_list = None
 
-                    # smartstore인 경우 구매링크, 이미지, 마스크 기능, 차단지수, 별점, 리뷰수
+                    # smartstore인 경우 구매링크, 이미지, 별점, 리뷰수, 기능, 리뷰
                     elif 'smartstore.naver' in redirect_url:
                         try:
                             # 구매 링크
-                            purchase_link = name_url
+                            purchase_link = redirect_url
 
                             # 마스크 이미지
                             large_xpath = '//*[@id="content"]/div/div[2]/div[1]/div[1]/div[1]/img'
                             img_url = dv.find_element_by_xpath(
                                 large_xpath).get_attribute('src')
-
-                            # 마스크 차단지수 및 기능
-                            mask_function_xpath = dv.find_element_by_xpath(
-                                '//*[@id="INTRODUCE"]/div/div[3]/div/div[2]/div/table/tbody/tr[2]/td[2]')
-                            # 해당 위치로 스크롤
-                            action = ActionChains(dv)
-                            action.move_to_element(mask_function_xpath).perform()
-                            dv.implicitly_wait(5)
-
-                            # 광고인 경우 마스크 기능
-                            div_tag = dv.find_element_by_xpath(
-                                '//*[@id="INTRODUCE"]/div/div[3]/div/div[2]/div')
-                            func_span_list = div_tag.find_elements_by_tag_name(
-                                'td')
-                            func_span_list.pop(-1)
-                                
-                            for func in func_span_list:
-                                if "1세" not in func.text and "2세" not in func.text and "3세" not in func.text and "4세" not in func.text and "5세" not in func.text and "6세" not in func.text:
-                                    if "0개" not in func.text:
-                                        main_func.append(func.text)
 
                             # 별점
                             star_location = dv.find_element_by_xpath(
@@ -360,23 +340,46 @@ def mask_crawling(start, end, page):
                                 review_number = cleaner(review_number)
                             else:
                                 review_number = 0
-                            
-                            # 리뷰
-                            mask_review_end_xpath = dv.find_element_by_xpath(
-                                '//*[@id="QNA"]/div/h3')
 
-                            mask_review_page_xpath = dv.find_element_by_xpath(
-                                '//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div')
-
+                            # 마스크 기능
+                            mask_function_xpath = dv.find_element_by_xpath(
+                                '//*[@id="INTRODUCE"]/div/div[3]/div/div[2]/div/table/tbody/tr[2]/td[2]')
                             # 해당 위치로 스크롤
-                            dv.implicitly_wait(5)
                             action = ActionChains(dv)
-                            action.move_to_element(
-                                mask_review_end_xpath).perform()
-                            
-                            mask_review_list = []
+                            action.move_to_element(mask_function_xpath).perform()
+                            dv.implicitly_wait(5)
 
-                            # 리뷰가 있을 때
+                            div_tag = dv.find_element_by_xpath(
+                                '//*[@id="INTRODUCE"]/div/div[3]/div/div[2]/div')
+                            func_span_list = div_tag.find_elements_by_tag_name(
+                                'td')
+                            func_span_list.pop(-1)
+                                
+                            for func in func_span_list:
+                                if "1세" not in func.text and "2세" not in func.text and "3세" not in func.text and "4세" not in func.text and "5세" not in func.text and "6세" not in func.text:
+                                    if "0개" not in func.text:
+                                        main_func.append(func.text)
+                        except:
+                            purchase_link = redirect_url
+                            main_func = None
+                               
+                        # 리뷰
+                        mask_review_end_xpath = dv.find_element_by_xpath(
+                            '//*[@id="QNA"]/div/h3')
+
+                        mask_review_page_xpath = dv.find_element_by_xpath(
+                            '//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div')
+
+                        # 해당 위치로 스크롤
+                        dv.implicitly_wait(5)
+                        action = ActionChains(dv)
+                        action.move_to_element(
+                            mask_review_end_xpath).perform()
+                        
+                        mask_review_list = []
+
+                        # 리뷰가 있는 경우
+                        try:
                             # review_page: 리뷰 page의 a태그 index  (1page=2, 2page=3,..., 10page=11, 이전버튼=1, 다음버튼=12)
                             review_page = 2
                             # 리뷰 크롤링 시작
@@ -424,11 +427,7 @@ def mask_crawling(start, end, page):
                                     break
                         # 리뷰가 없을 때
                         except:
-                            purchase_link = name_url
-                            main_func = None
-                            star_rating = float(0)
-                            review_number = 0
-                            # mask_review_list = None
+                            mask_review_list = None
                     else:
                         review_number = 0
                         star_rating = 0.0
