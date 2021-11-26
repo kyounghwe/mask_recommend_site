@@ -7,6 +7,7 @@ from db_connect import db
 from read_mysql import read_mask_data
 from read_mysql_select import select_category
 import json
+import requests
 
 user = Blueprint('user', __name__)
 
@@ -17,39 +18,41 @@ def home():
     if not session.get('logged_in'): check = 0
     else: check = 1  # 로그인 된 신호를 프론트에 줘야 함 -> 로그인 해야 리뷰, 별점, 찜 등의 기능 이용 가능
     
-    # 선택한 카테고리 가져오기 - localstorage 데이터를 ajax를 통해 가져옴
+    # "/category"에서 json 데이터 받아오기
+    uri = 'http://127.0.0.1:5000/category'
     try:
-        category_data = request.get_json()
-        mask_category = [None if category_data['mask_category'] == 'None' else category_data['mask_category']][0]
-        mask_blocking_grade = [None if category_data['mask_blocking_grade'] == 'None' else category_data['mask_blocking_grade']][0]
-        mask_function = [[None,None,None,None,None,None,None,None] if category_data['mask_function'] == ['None','None','None','None','None','None','None','None'] else category_data['mask_function']][0]
-        for i in range(8):
-            if mask_function[i] == 'None':
-                mask_function[i] = None
-        mask_price = [None if category_data['mask_price'] == 'None' else category_data['mask_price']][0]
+        uResponse = requests.get(uri)
+        print("uResponse: ", uResponse)
+        Jresponse = uResponse.text
+        data = json.loads(Jresponse)
+        print(data)
+        mask_category = data['mask_category']
+        mask_blocking_grade = data['mask_blocking_grade']
+        mask_function = data['mask_function']
+        mask_price = data['mask_price']
     except:
         mask_category = None
         mask_blocking_grade = None
-        mask_function = [None, None, None, None, None, None, None, None]
+        mask_function = [None,None,None,None,None,None,None,None]
         mask_price = None
-    print("mask_category: ",mask_category)
-
     
     # 선택한 카테고리가 있는 경우
     checked_list = [mask_category, mask_blocking_grade, mask_function, mask_price]
     if checked_list != [None, None, [None,None,None,None,None,None,None,None], None]:
         mask_list = select_category(checked_list)
         checked_list_for_html = []
-        for i in checked_list:
+        for i in checked_list[:-1]:
             if not i:
                 continue
             if type(i) is list:
                 for j in i:
-                    checked_list_for_html.append(j)
+                    if j:
+                        checked_list_for_html.append(j)
             else:
                 checked_list_for_html.append(i)
-        if session["mask_price"] != None:
-            if checked_list_for_html[-1] == 999999999:
+        if checked_list[-1] != None:
+            checked_list_for_html += checked_list[-1].split(":")
+            if checked_list_for_html[-1] == '999999999':
                 temp = "20000원 이상"
             else:
                 temp = " ~ ".join(list(map(str, checked_list_for_html[-2:]))) + '원'
@@ -71,30 +74,30 @@ def home():
     else:
         session['page_num'] = 0
     mask_list = mask_list[session['page_num']*16:session['page_num']*16 + 16]
-
+    
+    print("체크된 카테고리들: ",checked_list_for_html)
     return render_template("main.html", check=check, mask_list=mask_list, page_num=session['page_num'], checked_list=checked_list_for_html)
 
 # 카테고리 선택 -> json
-# @user.route('/category')
-# def category():
-#     try:
-#         category_data = request.get_json()
-#         mask_category = [None if category_data['mask_category'] == 'None' else category_data['mask_category']][0]
-#         mask_blocking_grade = [None if category_data['mask_blocking_grade'] == 'None' else category_data['mask_blocking_grade']][0]
-#         mask_function = [[None,None,None,None,None,None,None,None] if category_data['mask_function'] == ['None','None','None','None','None','None','None','None'] else category_data['mask_function']][0]
-#         for i in range(8):
-#             if mask_function[i] == 'None':
-#                 mask_function[i] = None
-#         mask_price = [None if category_data['mask_price'] == 'None' else category_data['mask_price']][0]
+@user.route('/category', methods=["GET","POST"])
+def category():
+    try:
+        category_data = request.get_json("server_data")
+        mask_category = [None if category_data['mask_category'] == 'None' else category_data['mask_category']][0]
+        mask_blocking_grade = [None if category_data['mask_blocking_grade'] == 'None' else category_data['mask_blocking_grade']][0]
+        mask_function = [[None,None,None,None,None,None,None,None] if category_data['mask_function'] == ['None','None','None','None','None','None','None','None'] else category_data['mask_function']][0]
+        for i in range(8):
+            if mask_function[i] == 'None':
+                mask_function[i] = None
+        mask_price = [None if category_data['mask_price'] == 'None' else category_data['mask_price']][0]
     
-#     except:
-#         mask_category = None
-#         mask_blocking_grade = None
-#         mask_function = [None, None, None, None, None, None, None, None]
-#         mask_price = None
+    except:
+        mask_category = None
+        mask_blocking_grade = None
+        mask_function = [None, None, None, None, None, None, None, None]
+        mask_price = None
     
-#     return json.dumps({"mask_category":mask_category, "mask_blocking_grade":mask_blocking_grade, "mask_function":mask_function, "mask_price":mask_price})
-    # print("mask_category: ",mask_category)
+    return json.dumps({"mask_category":mask_category, "mask_blocking_grade":mask_blocking_grade, "mask_function":mask_function, "mask_price":mask_price})
 
 # 회원가입 페이지
 ### 아이디와 비밀번호 조건 추가해야 함 -> 조건에 맞지 않으면 alert

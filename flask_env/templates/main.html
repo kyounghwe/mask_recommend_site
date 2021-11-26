@@ -185,7 +185,7 @@
             </header>
             <nav>
                 <!-- <form action="/" method="POST" id='form1' onsubmit="storeData()"> -->
-                <form method="POST" id='form1'>
+                <form action="/category" method="POST" id='form1'>
                     <ul>
                         <li>
                             <span class="category_name">카테고리</span>
@@ -284,7 +284,8 @@
         </div>
     </body>
 </html>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script>
     // myStorage = window.localStorage;
     // localStorage.setItem("key", value);
@@ -365,6 +366,7 @@
         post_category();
     }
     function post_category(){
+        // event.preventDefault()
         var server_data = {
             "mask_category": localStorage.getItem("mask_category"),
             "mask_blocking_grade": localStorage.getItem("mask_blocking_grade"),
@@ -381,14 +383,32 @@
             "mask_price": localStorage.getItem("mask_price")
         }
         $.ajax({
-            type: "POST",
-            url: "/",
+            type: "GET",
+            url: "/category",
             data: JSON.stringify(server_data),
             contentType: "application/json;charset=UTF-8",
-            dataType: 'json',
+            // dataType: 'json',
+            // async: false,
             success: function(data){
-                document.write(data)
+                // if(data.success == true){ // if true (1)
+                //     setTimeout(function(){// wait for 5 secs(2)
+                //         location.reload(); // then reload the page.(3)
+                //     }, 5000); 
+                // }
+                console.log("success");
+            },
+            error: function(xhr, textStatus, error){
+                console.log("error")
+                console.log(xhr.statusText);
+                console.log(textStatus);
+                console.log(error);
             }
+            // success: function(){
+            //     window.location.reload();
+            // }
+            // success: function(data){
+            //     document.write(data)
+            // }
             // success: function(){},
             // data: json,
             // success: function(response){
@@ -400,5 +420,8 @@
             // success 부분에서 해당 데이터를 바꾼다.
             // refresh
         })
+        // $(document).ajaxStop(function(){
+        //     window.location.reload();
+        // });
     }
 </script>
