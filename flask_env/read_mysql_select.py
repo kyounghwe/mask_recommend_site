@@ -27,13 +27,86 @@ def select_category(data):  # tb_mask_data테이블과 join해야함 - 마스크
                         sen = sen + sen_temp
                     else:
                         sen = sen + ' AND ' + sen_temp
-        elif i == 3 and data[i]:
+        elif i == 3 and data[i][0]:
             sen_temp = f'''{mask_category_list[i]} between {data[i][0]} and {data[i][1]}'''
             if sen == '':
                 sen = sen + sen_temp
             else:
                 sen = sen + ' AND ' + sen_temp
     sql = sql + sen
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+    mask_db.close()
+    return rows
+
+def save_selected_category(temp):
+    data = []
+    for i in temp:
+        if type(i) is list:
+            for j in i:
+                if j == None:
+                    data.append('')
+                else:
+                    data.append(j)
+        else:
+            if i == None:
+                data.append('')
+            else:
+                data.append(i)
+    a = data[0]
+    b = data[1]
+    c = data[2]
+    d = data[3]
+    e = data[4]
+    f = data[5]
+    g = data[6]
+    h = data[7]
+    i = data[8]
+    j = data[9]
+    k = data[10]
+    print("알파벳모여라아아: ",a,b,c,d,e,f,g,h,i,j,k)
+    # INSERT INTO selected_category VALUES({data[0]},{data[1]},{data[2]},{data[3]},{data[4]},{data[5]},{data[6]},{data[7]},{data[8]},{data[9]},{data[10]})
+            # INSERT INTO selected_category VALUES({a},{b},{c},{d},{e},{f},{g},{h},{i},{j},{k})
+            # INSERT INTO selected_category VALUES('','','','','','','','','','','')
+            # INSERT INTO selected_category VALUES('{a}','{b}','{c}','{d}','{e}','{f}','{g}','{h}','{i}','{j}','{k}');
+
+    mask_db = pymysql.connect(
+        user='root',
+        passwd='5452tulahyo12!A',
+        host='127.0.0.1',
+        db='try_mysql',
+        charset='utf8'
+    )
+    cursor = mask_db.cursor()
+    sql = f'''
+            TRUNCATE selected_category
+        '''
+    cursor.execute(sql)
+    mask_db.commit()
+    sql = f'''
+            INSERT INTO selected_category VALUES("{a}","{b}","{c}","{d}","{e}","{f}","{g}","{h}","{i}","{j}","{k}")
+        '''
+    cursor.execute(sql)
+    mask_db.commit()
+    # sql = f'''
+    #         select * from selected_category
+    #     '''
+    # rows = cursor.fetchall()
+    mask_db.close()
+    return None
+
+def get_selected_category():
+    mask_db = pymysql.connect(
+        user='root',
+        passwd='5452tulahyo12!A',
+        host='127.0.0.1',
+        db='try_mysql',
+        charset='utf8'
+    )
+    cursor = mask_db.cursor()
+    sql = f'''
+            SELECT * FROM selected_category
+        '''
     cursor.execute(sql)
     rows = cursor.fetchall()
     mask_db.close()
