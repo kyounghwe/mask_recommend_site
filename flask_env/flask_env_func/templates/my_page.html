@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>마이페이지</title>
+        <style>
+            ul, li {list-style: none;padding:0;margin:0;}
+            .wrap {width: 500px; margin: 0 auto; padding: 20px; background-color: rgb(247, 247, 247);margin-top:50px;}
+            .review_table {
+                width: 500px;
+                /* margin-left: 10px; */
+                height: 100%;
+                background-color: blue;
+            }
+        </style>
+
+    </head>
+    <body>
+        <form action="/list" enctype="multipart/form-data" method="POST">
+            <!--이미지를 잘 갖고 오는지 확인하는 코드-->
+            {% for i in range(text|length) %} 
+                <li class="img"><input type="checkbox" name="r_data" id="r_data" value="{{ text['r_id'].values[i] }}">
+                    <!--조회수 올리도록 연결하는 코드-->
+                    <!--a href="{{ url_for('Modify',modify_id = text['r_id'].values[i]) }}"-->
+                    <!--mysql에서 데이터 가져오는 코드-->
+                    {{ text['hits'].values[i] }}
+                    {{ text['user_id'].values[i] }}
+                    {{ text['goods_id'].values[i] }}
+                    {{ text['star'].values[i] }}
+                    {{ text['r_data'].values[i] }}
+                    {{ text['r_op1'].values[i] }}
+                    </a>
+                </li>
+            {% endfor %}
+            
+            <input type="submit" name="modify" id="modify" value="modi">
+            <input type="submit" name="delete" id="delete" value="del">
+            
+        </form> 
+    </body>
+    
+</html>

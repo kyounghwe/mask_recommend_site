@@ -16,14 +16,14 @@
 
     </head>
     <body>
-        <form action="/" enctype="multipart/form-data" method="POST">
+        <form action="/modi=<modify_id>" enctype="multipart/form-data" method="post" >
             <p class="join">
                 <label for="user_id" class="join-element">아이디</label>
-                <input type="text" name = "user_id" id = "user_id">
+                <input type="text" name = "user_id" id = "user_id" value="{{user_id}}" disabled>
             </p>
             <p class="join">
                 <label for="goods_id" class="join-element">상품명</label>
-                <input type="text" name = "goods_id" id = "goods_id" >
+                <input type="text" name = "goods_id" id = "goods_id" value="{{goods}}" disabled>
             </p>
             <p>
                 <span class="join-element">별점</span>
@@ -94,30 +94,14 @@
                     기타<input type="radio" name="r_op4" value="etc">
                 </span>
             </p>
-            <input type="file" name="img_data"/>
 
+            <input type="file" name="img_data" />
+            
             <input type="submit" name="upload" id="upload" value="Upload"/>
-        
-            <!--이미지를 잘 갖고 오는지 확인하는 코드-->
-            {% for i in range(text|length) %} 
-                <li class="img"><input type="checkbox" name="r_data" id="r_data" value="{{ text['r_id'].values[i] }}">
-                    <!--조회수 올리도록 연결하는 코드-->
-                    <a href="{{ url_for('hits_num',r_id_num = text['r_id'].values[i]) }}">
-                    <!--mysql에서 데이터 가져오는 코드-->
-                    <img src= "data:image/png;base64, {{show[i]}}" width="50" height="50"/>
-                    {{ text['hits'].values[i] }}
-                    {{ text['user_id'].values[i] }}
-                    {{ text['goods_id'].values[i] }}
-                    {{ text['star'].values[i] }}
-                    {{ text['r_data'].values[i] }}
-                    {{ text['r_op1'].values[i] }}
-                    </a>
-                </li>
-            {% endfor %}
             
-            <input type="submit" name="modify" id="modify" value="modi">
-            <input type="submit" name="delete" id="delete" value="del">
-            
+            <script>
+                
+            </script>
         </form> 
     </body>
     

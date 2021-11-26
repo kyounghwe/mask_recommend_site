@@ -12,6 +12,7 @@ class review(db.Model):
     r_op3 = db.Column(db.String(100),nullable=False)
     r_op4 =db.Column(db.String(100),nullable=False)
     img_data = db.Column(db.String(800),nullable=False)
+    hits = db.Column(db.Integer, nullable = False)
     def __init__(self, user_id, goods_id,star,r_data,r_op1,r_op2,r_op3,r_op4,img_data):
         self.user_id = user_id
         self.goods_id = goods_id
