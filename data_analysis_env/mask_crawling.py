@@ -14,6 +14,8 @@ driver_path = r'C:\Users\chromedriver'
 options = webdriver.ChromeOptions()
 # 창 숨기는 옵션 추가
 options.add_argument("headless")
+options.add_argument('--no-sandbox')
+options.add_argument('--disable-dev-shm-usage')
 
 # 콤마 제거 및 정수형 변환
 def cleaner(something):
@@ -155,18 +157,18 @@ def mask_crawling(start, end, page):
                         except:
                             main_func = None
 
-                        # 마스크 리뷰 위치로 스크롤
-                        mask_review_end_xpath = dv.find_element_by_xpath(
-                            '//*[@id="section_recommend"]/h3')
-                        dv.implicitly_wait(10)
-                        action = ActionChains(dv)
-                        action.move_to_element(mask_review_end_xpath).perform()
-                        
-                        # 마스크 리뷰 리스트 생성
-                        mask_review_list = []
-
-                        # 동작 환경에 맞추어 대기시간 설정 (implicitly_wait)
                         try:
+                            # 마스크 리뷰 위치로 스크롤
+                            mask_review_end_xpath = dv.find_element_by_xpath(
+                                '//*[@id="section_recommend"]/h3')
+                            dv.implicitly_wait(10)
+                            action = ActionChains(dv)
+                            action.move_to_element(mask_review_end_xpath).perform()
+                            
+                            # 마스크 리뷰 리스트 생성
+                            mask_review_list = []
+
+                            # 동작 환경에 맞추어 대기시간 설정 (implicitly_wait)
                             mask_review_page_xpath = dv.find_element_by_xpath(
                                 '//*[@id="section_review"]/div[3]')
                             page_num = mask_review_page_xpath.text
@@ -358,24 +360,25 @@ def mask_crawling(start, end, page):
                         except:
                             purchase_link = redirect_url
                             main_func = None
-                               
-                        # 리뷰
-                        mask_review_end_xpath = dv.find_element_by_xpath(
-                            '//*[@id="QNA"]/div/h3')
 
-                        mask_review_page_xpath = dv.find_element_by_xpath(
-                            '//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div')
+                        try:   
+                            # 리뷰
+                            mask_review_end_xpath = dv.find_element_by_xpath(
+                                '//*[@id="QNA"]/div/h3')
 
-                        # 해당 위치로 스크롤
-                        dv.implicitly_wait(5)
-                        action = ActionChains(dv)
-                        action.move_to_element(
-                            mask_review_end_xpath).perform()
+                            mask_review_page_xpath = dv.find_element_by_xpath(
+                                '//*[@id="REVIEW"]/div/div[3]/div/div[2]/div/div')
+
+                            # 해당 위치로 스크롤
+                            dv.implicitly_wait(5)
+                            action = ActionChains(dv)
+                            action.move_to_element(
+                                mask_review_end_xpath).perform()
+                            
+                            mask_review_list = []
+
+                            # 리뷰가 있는 경우
                         
-                        mask_review_list = []
-
-                        # 리뷰가 있는 경우
-                        try:
                             # review_page: 리뷰 page의 a태그 index  (1page=2, 2page=3,..., 10page=11, 이전버튼=1, 다음버튼=12)
                             review_page = 2
                             # 리뷰 크롤링 시작
