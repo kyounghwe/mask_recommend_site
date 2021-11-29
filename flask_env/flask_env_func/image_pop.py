@@ -1,11 +1,11 @@
-from io import BytesIO
-from flask import Flask, render_template,request,session,redirect,url_for,Response
+
+from flask import Flask, render_template,request,session,redirect,url_for
 
 from db_connect import db, buffer,engine,cursor,conn
 import cgi
 
 #이미지 데이터베이스에 저장
-from models import review
+from models import review,Zzim
 import base64
 import pandas as pd
 from PIL import Image
@@ -26,12 +26,34 @@ def reviews():
         #삭제기능 
         if 'delete' in request.form:
             in_id = request.form.getlist('r_data')
-            for j in range(len(in_id)):
-                del_data = '''DELETE FROM review where r_id=%s'''
-                cursor.execute(del_data, [in_id[j]])
+            del_data = '''DELETE FROM review where r_id=%s'''
+            cursor.execute(del_data, [in_id[1]])
+            conn.commit()
+            conn.close()
+            return redirect(url_for('reviews'))
+
+        elif 'zzim' in request.form:
+            r_id = request.form.getlist('r_data')
+            pk_id = r_id[1]            
+            review_data = pd.read_sql(sql='SELECT * FROM review where r_id="%s"'%pk_id,con=engine)
+            zzim_goods = review_data['goods_id'].values[0]
+            zzim_user = review_data['user_id'].values[0]
+            
+            check_zzim = pd.read_sql(sql='SELECT user_id FROM zzim where goods_id="%s"'%zzim_goods,con=engine)
+            print(check_zzim)
+            print(zzim_user)
+            if zzim_user in check_zzim:
+                del_zzim = '''DELETE FROM zzim where user_id=%s, goods_id=%s'''
+                cursor.execute(del_zzim,[zzim_user,zzim_goods])
                 conn.commit()
                 conn.close()
-            return redirect(url_for('reviews'))
+                return "찜삭제"
+            else:
+                zzim = Zzim(zzim_user,zzim_goods)
+                db.session.add(zzim)
+                db.session.commit()
+                session['zzim']=True
+                return "찜추가"
 
         elif 'upload' in request.form:
             tmp_img_data = request.files['img_data']
@@ -51,6 +73,7 @@ def reviews():
             member = review(user_id,goods_id,star,r_data,r_op1,r_op2,r_op3,r_op4,img_data )
             db.session.add(member)
             db.session.commit()
+            db.session.close()
             return redirect(url_for('reviews'))
         else:
             return "name 확인이 안됨"
@@ -64,10 +87,10 @@ def reviews():
             stage2 = img_str.decode('utf-8')
             img.append(stage2)
         
-        return render_template('Mlist.html',show=img,text = img_df)
+        return render_template('Mlist.html',show=img,text = img_df)   
 
 #조회수 판별 기능
-@app.route('/<r_id_num>')
+@app.route('/hits/<r_id_num>')
 def hits_num(r_id_num):
     hits = '''UPDATE review SET hits = hits + 1 WHERE r_id = %s'''
     cursor.execute(hits, [r_id_num])

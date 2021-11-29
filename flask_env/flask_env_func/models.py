@@ -41,7 +41,7 @@ class Member(db.Model):
         self.user_job = user_job
 
 class Zzim(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    r_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(20), nullable=False)
     goods_id = db.Column(db.String(80), nullable=False)
 

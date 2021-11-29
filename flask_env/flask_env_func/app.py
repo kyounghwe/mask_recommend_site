@@ -4,17 +4,12 @@ from flask import Flask, render_template,request,session
 #테스트용 임폿
 from flask import redirect,url_for
 from pymysql import NULL
-from werkzeug.utils import validate_arguments
 
 #데이터베이스에서 불러와서 현 데이터와 비교하기 
 from db_connect import db, engine,buffer,conn,cursor
-from models import Member,review
 import pandas as pd
 import base64
 from PIL import Image
-import cgi
-import sys
-import wtforms
 ''''''
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:ekdldksk@localhost:3306/testdb'
@@ -81,59 +76,55 @@ def Mlist():
         user_info = pd.read_sql(sql='SELECT * FROM review where user_id="%s"'%u,con=engine)
         if request.method == "POST":
             if 'modify' in request.form:
-                return redirect(url_for('Modify',modify_id=request.form['r_data']))
+                return redirect(url_for('Modify',r_id=request.form['r_data']))
         return render_template('my_page.html',text=user_info)
     return redirect(url_for('login'))
 
-@app.route('/list/modi=<modify_id>',methods=["GET","POST"])
-def Modify(modify_id):   
-    #u = session['user']
-    pk = request.args.get("modi")
-    print(pk,file=sys.stdout)
-    #user_info = pd.read_sql(sql='SELECT * FROM review where user_id="%s"'%u,con=engine)
-        #수정
+#수정기능
+@app.route('/modify',methods=["GET","POST"])
+def Modify(): 
     if request.method == 'POST':
-        print("포스트가 된다구",file=sys.stdout)
-        #if 'user' in session:
-        if not request.files.get('img_data'):
-            img_data = NULL
-        else:
-            tmp_img_data = request.files['img_data']
-            im= Image.open(tmp_img_data)
-            im.save(buffer,format='png')
-            img_data = base64.b64encode(buffer.getvalue())
-            img_update = '''UPDATE review SET img_data=%s where r_id=%s'''
-            cursor.execute(img_update,[img_data,pk])
+        r_id = request.form['r_id']
+        if 'modi' in request.form:
+            print(r_id)
+            if not request.files.get('img_data'):
+                img_data = NULL
+            else:
+                tmp_img_data = request.files['img_data']
+                im= Image.open(tmp_img_data)
+                im.save(buffer,format='png')
+                img_data = base64.b64encode(buffer.getvalue())
+                img_update = '''UPDATE review SET img_data=%s where r_id=%s'''
+                cursor.execute(img_update,[img_data,r_id])
+         
+            star = request.form['star']
+            r_data = request.form['r_data']
+            r_op1 = request.form['r_op1']
+            r_op2 = request.form['r_op2']
+            r_op3 = request.form['r_op3']
+            r_op4 = request.form['r_op4']
+
+            update = '''UPDATE review 
+                    SET star = %s,
+                        r_data = %s,
+                        r_op1 = %s,
+                        r_op2 =%s,
+                        r_op3 = %s,
+                        r_op4 = %s
+                    WHERE r_id = %s'''
+            cursor.execute(update,[star,r_data,r_op1,r_op2,r_op3,r_op4,r_id])
             conn.commit()
             conn.close()
-
-        star = request.form['star']
-        r_data = request.form['r_data']
-        r_op1 = request.form['r_op1']
-        r_op2 = request.form['r_op2']
-        r_op3 = request.form['r_op3']
-        r_op4 = request.form['r_op4']
-
-        update = '''UPDATE review 
-                SET star = %s,
-                    r_data = %s,
-                    r_op1 = %s,
-                    r_op2 =%s,
-                    r_op3 = %s,
-                    r_op4 = %s
-                WHERE r_id = %s'''
-        print(update,file=sys.stdout)
-        cursor.execute(update,[star,r_data,r_op1,r_op2,r_op3,r_op4,5])
-        conn.commit()
-        conn.close()
-        return render_template('my_page.html')
+            return "수정되었습니다"
     if request.method == 'GET':
         #사용자 상품이름 고정 
+        r_id = request.args.get('r_id')
         u = session['user']
-        r = modify_id
+        r = r_id
         goods_info = pd.read_sql(sql='SELECT * FROM review where r_id=%s'%r,con=engine)
         goods = str(goods_info['goods_id'].values[0])
-        return render_template('modify.html', user_id = u, goods = goods)
+        
+        return render_template('modify.html', user_id = u, goods = goods, r_id=r_id)
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1',port=5000, debug=True)
