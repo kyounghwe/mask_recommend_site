@@ -32,6 +32,7 @@ def reviews():
             conn.close()
             return redirect(url_for('reviews'))
 
+        #찜기능
         elif 'zzim' in request.form:
             r_id = request.form.getlist('r_data')
             pk_id = r_id[1]            
@@ -40,10 +41,8 @@ def reviews():
             zzim_user = review_data['user_id'].values[0]
             
             check_zzim = pd.read_sql(sql='SELECT user_id FROM zzim where goods_id="%s"'%zzim_goods,con=engine)
-            print(check_zzim)
-            print(zzim_user)
-            if zzim_user in check_zzim:
-                del_zzim = '''DELETE FROM zzim where user_id=%s, goods_id=%s'''
+            if zzim_user in list(check_zzim['user_id']):
+                del_zzim = '''DELETE FROM zzim where user_id=%s and goods_id=%s'''
                 cursor.execute(del_zzim,[zzim_user,zzim_goods])
                 conn.commit()
                 conn.close()
