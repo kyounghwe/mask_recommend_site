@@ -12,6 +12,7 @@ from db_connect import db
 from api_user import user
 from api_goods import goods
 from api_user_page import user_page
+from api_admin_page import admin_page
 import cgi
 
 # form = cgi.FieldStorage()
@@ -28,6 +29,7 @@ app.config['SECRET_KEY'] = 'the random string'  # session 실행하려면 시크
 app.register_blueprint(user)
 app.register_blueprint(goods)
 app.register_blueprint(user_page)
+app.register_blueprint(admin_page)
 
 
 if __name__ == "__main__":

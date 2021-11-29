@@ -1,0 +1,36 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\spira\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add char.js
+
+PATH: 
+  C:\Users\spira\.conda\envs\py3_7_6;C:\Users\spira\.conda\envs\py3_7_6\Library\mingw-w64\bin;C:\Users\spira\.conda\envs\py3_7_6\Library\usr\bin;C:\Users\spira\.conda\envs\py3_7_6\Library\bin;C:\Users\spira\.conda\envs\py3_7_6\Scripts;C:\Users\spira\.conda\envs\py3_7_6\bin;C:\ProgramData\Anaconda3\condabin;C:\Program Files\Zulu\zulu-8\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\ProgramData\Anaconda3;C:\ProgramData\Anaconda3\Library\mingw-w64\bin;C:\ProgramData\Anaconda3\Library\usr\bin;C:\ProgramData\Anaconda3\Library\bin;C:\ProgramData\Anaconda3\Scripts;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\iCLS;C:\Program Files\Intel\Intel(R) Management Engine Components\iCLS;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\Program Files\Intel\WiFi\bin;C:\Program Files\Common Files\Intel\WirelessCommon;C:\WINDOWS\System32\OpenSSH;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\nodejs;C:\Program Files\Git\cmd;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\Amazon\AWSCLIV2;C:\Program Files\Zulu\zulu-8\bin;C:\spark\spark-2.4.8-bin-hadoop2.7\bin;C:\Hadoop\bin;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Program Files\MySQL\MySQL Shell 8.0\bin;C:\Users\spira\AppData\Local\Programs\Python\Python310\Scripts;C:\Users\spira\AppData\Local\Programs\Python\Python310;C:\Users\spira\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Bandizip;C:\src\flutter;C:\Users\spira\AppData\Roaming\npm;C:\Users\spira\AppData\Local\GitHubDesktop\bin
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  14.17.3
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/char.js: Not found
+      at Request.params.callback [as _callback] (C:\Users\spira\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66988:18)
+      at Request.self.callback (C:\Users\spira\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140662:22)
+      at Request.emit (events.js:375:28)
+      at Request.<anonymous> (C:\Users\spira\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141634:10)
+      at Request.emit (events.js:375:28)
+      at IncomingMessage.<anonymous> (C:\Users\spira\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141556:12)
+      at Object.onceWrapper (events.js:481:28)
+      at IncomingMessage.emit (events.js:387:35)
+      at endReadableNT (internal/streams/readable.js:1317:12)
+      at processTicksAndRejections (internal/process/task_queues.js:82:21)
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

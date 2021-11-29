@@ -91,14 +91,12 @@
             article {
                 width: 100%;
                 height: 1515px;
-                /* background-color: blue; */
             }
             .article_box{
                 width: 100%;
                 height: 363.75px;
                 float: left;
                 margin-bottom: 15px;
-                /* background-color: red; */
             }
             .article_box ul{
                 float: left;
@@ -118,7 +116,6 @@
             }
             .article_box ul>li span {
                 display: block;
-                /* background-color: yellowgreen; */
                 margin-bottom: 5px;
             }
             .article_box ul>li span:first-child{
@@ -135,7 +132,17 @@
                 height: 100%;
                 vertical-align: middle;
             }
-
+            #mask_name {
+                display: block;
+                background-color: rgb(203, 224, 255, 40%);
+                height: 42px; 
+                width: 257px;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
             .bottom {
                 width: 100%;
                 height: 200px;
@@ -175,8 +182,10 @@
                         <li>
                             {% if check == 0 %}
                             <a href="/join">회원가입</a>
-                            {% else %}
+                            {% elif check == 1 %}
                             <a href="/mypage">마이페이지</a>
+                            {% else %}
+                            <a href="/admin_page">관리자페이지</a>
                             {% endif %}
                         </li>
                     </ul>
@@ -243,14 +252,13 @@
             </form>
             <section>
                 <article>
-                    <!--  -->
                     {% if mask_list|length == 16 %}
                     <div class="article_box"> <!--mask_name, mask_price, star_rating, mask_url, pk_id-->
                         {% for j in range(16) %}
                         <ul id="mask_box">
                             <li><a href="/goods?data={{mask_list[j][4]}}"><img src={{mask_list[j][3]}} alt="Mask Image"></a></li>
                             <li><a href="/goods?data={{mask_list[j][4]}}">
-                                <span>{{mask_list[j][0]}}</span>
+                                <span id="mask_name">{{mask_list[j][0]}}</span>
                                 <span>가격: {{mask_list[j][1]}}원</span>
                                 <span>별점: {{mask_list[j][2]}}</span>
                             </a></li>
@@ -263,9 +271,9 @@
                         <ul id="mask_box">
                             <li><a href="/goods?data={{mask_list[j][4]}}"><img src={{mask_list[j][3]}} alt="Mask Image"></a></li>
                             <li><a href="/goods?data={{mask_list[j][4]}}">
-                                <span>{{mask_list[j][0]}}</span>
-                                <span>{{mask_list[j][1]}}</span>
-                                <span>{{mask_list[j][2]}}</span>
+                                <span id="mask_name">{{mask_list[j][0]}}</span>
+                                <span>가격: {{mask_list[j][1]}}</span>
+                                <span>별점: {{mask_list[j][2]}}</span>
                             </a></li>
                         </ul>
                         {% endfor %}

@@ -17,6 +17,15 @@ class tb_user_info(db.Model):
         self.user_age = user_age
         self.user_job = user_job
 
+class tb_admin_info(db.Model):
+    pk_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    admin_id = db.Column(db.String(20), nullable=False, unique=True)
+    admin_pw = db.Column(db.String(20), nullable=False)
+    
+    def __init__(self, admin_id, admin_pw):
+        self.admin_id = admin_id
+        self.admin_pw = admin_pw
+
 class tb_mask_data(db.Model):  # 구매링크 추가해야 함
     pk_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     mask_name = db.Column(db.String(50), nullable=False)

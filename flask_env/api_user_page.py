@@ -18,4 +18,7 @@ def mypage():
 def myreview():
     user_num_id = get_user(session['user_id'])[0][0]
     user_review_list = get_my_review(user_num_id)  # mask_id, star_rating, review_text, img
-    return render_template('my_page_review.html', user_review_list=user_review_list)
+    user_review_img = []
+    for i in range(len(user_review_list)):
+        user_review_img.append(user_review_list[i][-1].decode('utf-8'))  # 이미지 디코드
+    return render_template('my_page_review.html', user_review_list=user_review_list[:-1], user_review_img=user_review_img)

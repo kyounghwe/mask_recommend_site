@@ -95,7 +95,7 @@ def get_user(data):
     mask_db.close()
     return rows
 
-def get_my_review(data):  # tb_mask_data테이블과 join해야함 - 마스크이름 얻기
+def get_my_review(data):
     mask_db = pymysql.connect(
         user='root',
         passwd='5452tulahyo12!A',
@@ -105,9 +105,10 @@ def get_my_review(data):  # tb_mask_data테이블과 join해야함 - 마스크�
     )
     cursor = mask_db.cursor()
     sql = f'''
-            SELECT mask_id, star_rating, review_text, img
-            FROM tb_review 
-            WHERE user_id LIKE '{data}'
+            SELECT b.mask_name, a.star_rating, a.review_text, a.img
+            FROM tb_review AS a
+            INNER JOIN tb_mask_data AS b
+            ON a.mask_id = b.pk_id
         '''
     cursor.execute(sql)
     rows = cursor.fetchall()

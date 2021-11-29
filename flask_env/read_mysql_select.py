@@ -64,12 +64,6 @@ def save_selected_category(temp):
     i = data[8]
     j = data[9]
     k = data[10]
-    print("알파벳모여라아아: ",a,b,c,d,e,f,g,h,i,j,k)
-    # INSERT INTO selected_category VALUES({data[0]},{data[1]},{data[2]},{data[3]},{data[4]},{data[5]},{data[6]},{data[7]},{data[8]},{data[9]},{data[10]})
-            # INSERT INTO selected_category VALUES({a},{b},{c},{d},{e},{f},{g},{h},{i},{j},{k})
-            # INSERT INTO selected_category VALUES('','','','','','','','','','','')
-            # INSERT INTO selected_category VALUES('{a}','{b}','{c}','{d}','{e}','{f}','{g}','{h}','{i}','{j}','{k}');
-
     mask_db = pymysql.connect(
         user='root',
         passwd='5452tulahyo12!A',

@@ -14,11 +14,10 @@ user = Blueprint('user', __name__)
 @user.route('/', methods=["GET", "POST"])
 def home():
     # 로그인 여부 확인
-    if not session.get('logged_in'): check = 0
-    else: check = 1  # 로그인 된 신호를 프론트에 줘야 함 -> 로그인 해야 리뷰, 별점, 찜 등의 기능 이용 가능
+    if not session.get('logged_in'): session['check'] = 0
+    # else: check = 1  # 로그인 된 신호를 프론트에 줘야 함 -> 로그인 해야 리뷰, 별점, 찜 등의 기능 이용 가능
 
     data = get_selected_category()
-    print("data: ",data)
     if data == ():
         mask_category = ''
         mask_blocking_grade = ''
@@ -72,16 +71,14 @@ def home():
         session['page_num'] = 0
     mask_list = mask_list[session['page_num']*16:session['page_num']*16 + 16]
     
-    print("체크된 카테고리들: ",checked_list_for_html)
-    return render_template("main.html", check=check, mask_list=mask_list, page_num=session['page_num'], checked_list=checked_list_for_html)
+    return render_template("main.html", check=session['check'], mask_list=mask_list, page_num=session['page_num'], checked_list=checked_list_for_html)
 
-# 카테고리 선택 -> json
+# 카테고리 선택
 @user.route('/category', methods=["GET","POST"])
 def category():
     if request.method == "POST":
         try:
             category_data = request.get_json("server_data")
-            print("category_data: ", category_data)
             mask_category = ['' if category_data['mask_category'] == 'None' else category_data['mask_category']][0]
             mask_blocking_grade = ['' if category_data['mask_blocking_grade'] == 'None' else category_data['mask_blocking_grade']][0]
             mask_function = [['','','','','','','',''] if category_data['mask_function'] == ['None','None','None','None','None','None','None','None'] else category_data['mask_function']][0]
@@ -136,7 +133,7 @@ def login():
                 if user:  # 아이디, 비밀번호 일치 -> 로그인 성공
                     session['logged_in'] = True
                     session['user_id'] = user_id
-                    check = 1
+                    session['check'] = 1
                     return redirect(url_for('user.home'))
                 else:  # 아이디, 비밀번호 불일치
                     errMsg = '아이디 또는 비밀번호가 틀렸습니다'
@@ -153,7 +150,9 @@ def login():
 def logout():
     session['logged_in'] = False
     session['user_id'] = None
-    errMsg = None
-    check = 0
-    mask_list = read_mask_data()
-    return render_template('main.html', check=check, mask_list=mask_list, page_num=session['page_num'])
+    session['admin_id'] = None
+    # errMsg = None
+    session['check'] = 0
+    # mask_list = read_mask_data()
+    # return render_template('main.html', check=session['check'], mask_list=mask_list, page_num=session['page_num'])
+    return redirect(url_for('user.home'))
