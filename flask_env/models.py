@@ -72,3 +72,12 @@ class tb_review(db.Model):  # 임의로 써놓은 것이기 때문에 조정 필
         self.option3 = option3
         self.option4 = option4
         self.img = img
+
+class tb_zzim(db.Model):
+    pk_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    mask_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, mask_id, user_id):
+        self.mask_id = mask_id
+        self.user_id = user_id

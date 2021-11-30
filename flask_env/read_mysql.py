@@ -27,9 +27,8 @@ def read_mask_page_data(data):
         charset='utf8'
     )
     cursor = mask_db.cursor()
-    # 나중에 구매링크 컬럼도 끝에 추가하기
     sql = f'''
-            SELECT mask_name, mask_price, mask_star_rating, mask_img_link
+            SELECT mask_name, mask_price, mask_star_rating, mask_img_link, mask_purchase_link
             FROM tb_mask_data
             WHERE pk_id LIKE {data}
         '''
@@ -105,10 +104,32 @@ def get_my_review(data):
     )
     cursor = mask_db.cursor()
     sql = f'''
-            SELECT b.mask_name, a.star_rating, a.review_text, a.img
+            SELECT b.mask_name, a.star_rating, a.review_text, a.img, a.pk_id
             FROM tb_review AS a
             INNER JOIN tb_mask_data AS b
             ON a.mask_id = b.pk_id
+            WHERE a.user_id LIKE '{data}'
+        '''
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+    mask_db.close()
+    return rows
+
+def get_my_zzim(data):
+    mask_db = pymysql.connect(
+        user='root',
+        passwd='5452tulahyo12!A',
+        host='127.0.0.1',
+        db='try_mysql',
+        charset='utf8'
+    )
+    cursor = mask_db.cursor()
+    sql = f'''
+            SELECT b.mask_name, a.pk_id
+            FROM tb_zzim AS a
+            INNER JOIN tb_mask_data AS b
+            ON a.mask_id = b.pk_id
+            WHERE a.user_id LIKE {data}
         '''
     cursor.execute(sql)
     rows = cursor.fetchall()

@@ -4,6 +4,15 @@
         <meta charset="utf-8">
         <title>나의 리뷰</title>
         <style>
+            button, input {background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer}
+            #home {
+                background-color: rgb(170, 231, 255);
+                width: 50px;
+                height: 50px;
+                border-radius: 10px;
+                position: absolute;
+                top: 20px; left:20px;
+            }
             ul, li {list-style: none;padding:0;margin:0;}
             .wrap {width: 500px; margin: 0 auto; padding: 20px; background-color: rgb(247, 247, 247);margin-top:50px;}
             .review_table {
@@ -33,6 +42,11 @@
                 margin-left: 160px;
                 position: absolute;
                 line-height: 37.5px;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
             }
             .star_rating {
                 top: 37.5px;
@@ -43,7 +57,7 @@
             .btn {
                 top: 112.5px;
             }
-            .btn a {
+            .btn a, #delete {
                 text-decoration: none;
                 color: inherit;
                 display: inline-block;
@@ -54,13 +68,17 @@
                 margin-right: 5px;
                 background-color:rgb(140, 194, 255)
             }
-            .btn a:last-child{
+            #delete {
                 background-color: gray;
                 color: white;
+                font-size: 16px;
+                position: absolute;
+                top: 2px; left:60px;
             }
         </style>
     </head>
     <body>
+        <button id="home" type="button" onclick="location.href='/'">홈</button>
         <div class="wrap">
             <h2>나의 리뷰</h2>
             {% if user_review_list %}
@@ -73,8 +91,12 @@
                         <li class="star_rating">별점: {{ user_review_list[i][1] }}</li>
                         <li class="review_text">리뷰: {{ user_review_list[i][2] }}</li>
                         <li class="btn">
-                            <a href="#">수정</a>
-                            <a href="#">삭제</a>
+                            <a href="/modify_review?r_id={{user_review_list[i][-1]}}">수정</a>
+                            <!-- <a href="#">삭제</a> -->
+                            <form action="/myreview" method="POST">
+                                <input type="submit" name="delete" id="delete" value="삭제">
+                                <input type="hidden" name='r_id' value='{{user_review_list[i][-1]}}'>
+                            </form>
                         </li>
                     </ul>
                 </li>

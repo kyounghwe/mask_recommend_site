@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>나의 찜</title>
+        <style>
+            button, input {background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer}
+            #home {
+                background-color: rgb(170, 231, 255);
+                width: 50px;
+                height: 50px;
+                border-radius: 10px;
+                position: absolute;
+                top: 20px; left:20px;
+            }
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+            ul, li {list-style: none;padding:0;margin:0;}
+            .wrap {width: 500px; margin: 0 auto; padding: 20px; background-color: rgb(247, 247, 247);margin-top:50px;}
+            .review_table {
+                width: 500px;
+                height: 100%;
+            }
+            .review_row {
+                height: 43px;
+                background-color: rgb(235, 235, 235);
+                margin-bottom: 20px;
+            }
+            /* img {
+                width: 150px; height: 150px;
+            } */
+            .review_contents {
+                position: relative;
+            }
+            .review_contents li {
+                float: left;
+            }
+            .mask_name, .btn {
+                height: 37.5px;
+                width: 400px;
+                position: absolute;
+                line-height: 43px;
+                /* background-color: khaki; */
+            }
+            .mask_name {
+                margin-left: 10px;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            .btn {
+                top: 2px; left: 445px;
+            }
+            #delete {
+                text-decoration: none;
+                color: inherit;
+                display: inline-block;
+                height: 30px; width: 50px;
+                text-align: center;
+                line-height: 35px;
+                border-radius: 10px;
+                margin-right: 5px;
+                background-color: gray;
+                color: white;
+                font-size: 15px;
+            }
+        </style>
+    </head>
+    <body>
+        <button id="home" type="button" onclick="location.href='/'">홈</button>
+        <div class="wrap">
+            <h2>나의 찜</h2>
+            {% if user_zzim_list %}
+            <ul class="review_table">
+                {% for i in range(user_zzim_list|length) %}  <!-- mask_id, pk_id -->
+                <li class="review_row">
+                    <ul class="review_contents">
+                        <li class="mask_name"><a href="#">{{ user_zzim_list[i][0] }}</a></li>
+                        <li class="btn">
+                            <form action="/myzzim" method="POST">
+                                <input type="submit" name="delete" id="delete" value="삭제">
+                                <input type="hidden" name='r_id' value='{{user_zzim_list[i][-1]}}'>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+                <p>남긴 리뷰가 없습니다</p>
+            {% endif %}
+        </div>
+    </body>
+</html>

@@ -1,10 +1,10 @@
 ''' api_goods.py
 
 상품상세페이지 / 리뷰쓰기페이지 '''
-from flask import Blueprint, render_template, request, session, redirect, url_for
+from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 from read_mysql import read_mask_page_data, read_review_data, get_user, get_mask_name
-from models import tb_review
-from db_connect import db, buffer, engine
+from models import tb_review, tb_zzim
+from db_connect import db, buffer, engine, cursor, conn
 import base64
 from PIL import Image
 import pandas as pd
@@ -14,31 +14,62 @@ form = cgi.FieldStorage()
 goods = Blueprint('goods', __name__)
 
 # 상품상세페이지
-@goods.route('/goods')
+@goods.route('/goods', methods=["GET","POST"])
 def goods_info():
-    mask_id = request.args.get('data')  # 클릭한 상품의 pk_id
-    mask_data_list = read_mask_page_data(mask_id)
-    review_list = read_review_data(mask_id)
-    ### 이미지 데이터 불러오기
-    img_list=[]
-    show = tb_review.query.all()
-    img_df = pd.read_sql(sql='SELECT * FROM tb_review',con=engine)
-    for i in range(len(show)):
-        img_str = img_df['img'].values[i]
-        stage2 = img_str.decode('utf-8')
-        img_list.append(stage2)
+    if request.method == "GET":
+        if request.args.get('data'):
+            mask_id = request.args.get('data')  # 클릭한 상품의 pk_id
+        else:
+            mask_id = session['mask_id']
+        mask_data_list = read_mask_page_data(mask_id)
+        review_list = read_review_data(mask_id)
+        ### 이미지 데이터 불러오기
+        img_list=[]
+        show = tb_review.query.all()
+        img_df = pd.read_sql(sql='SELECT * FROM tb_review',con=engine)
+        for i in range(len(show)):
+            img_str = img_df['img'].values[i]
+            stage2 = img_str.decode('utf-8')
+            img_list.append(stage2)
 
-    ### 이미 리뷰를 남긴 상품이면 리뷰를 또 남길 수 없게 하기 - 이미 리뷰를 작성하셨습니다 or 리뷰작성버튼비활성화
-    if session.get('logged_in'):
-        user_id = session['user_id']
-        user_id = get_user(user_id)[0][0]
-    else:
-        user_id = None
+        ### 이미 리뷰를 남긴 상품이면 리뷰를 또 남길 수 없게 하기 - 이미 리뷰를 작성하셨습니다 or 리뷰작성버튼비활성화
+        if session.get('logged_in'):
+            user_id = session['user_id']
+            user_id = get_user(user_id)[0][0]
+        else:
+            user_id = None
 
-    session['mask_id'] = mask_id
-    session['user_pk_id'] = user_id
+        session['mask_id'] = mask_id
+        session['user_pk_id'] = user_id
 
-    return render_template('goods.html', mask_data_list=mask_data_list, review_list=review_list, img_data=img_list, user_id=user_id)
+        return render_template('goods.html', mask_data_list=mask_data_list, review_list=review_list, img_data=img_list, user_id=user_id)
+    else:  # 찜
+        mask_id = session['mask_id']
+        user_id = session['user_pk_id']
+        try:
+            mask = tb_zzim.query.filter(tb_zzim.mask_id == mask_id).all()
+            if mask:
+                mask = tb_zzim.query.filter(tb_zzim.user_id == user_id).first()
+                if mask:
+                    flash('이미 찜한 상품입니다.')
+                    return redirect(url_for('goods.goods_info'))
+                else:
+                    sql = f'''
+                        INSERT INTO tb_zzim(mask_id, user_id) VALUES({mask_id}, {user_id})
+                    '''
+                    cursor.execute(sql)
+                    conn.commit()
+                    conn.close()
+            else:
+                sql = f'''
+                        INSERT INTO tb_zzim(mask_id, user_id) VALUES({mask_id}, {user_id})
+                    '''
+                cursor.execute(sql)
+                conn.commit()
+                conn.close()
+        except:
+            pass
+        return redirect(url_for('goods.goods_info'))
 
 @goods.route('/review', methods=["GET", "POST"])
 def write_review():
