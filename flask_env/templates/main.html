@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>마스크 추천 사이트</title>
+        <style>
+            ul, li {list-style:none;padding:0;margin:0;}
+            a {text-decoration:none;color:inherit;}
+            div{padding:0;margin:0;}
+            button{background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer}
+            .wrap {
+                width: 1080px;
+                margin: 0 auto;
+            }
+            /* body {background-color: rgb(240, 240, 240);} */
+            header {
+                width: 100%; height: 250px;
+                background-color: white;
+                margin: 0; padding: 0;
+                position: relative;
+            }
+            header h1 {
+                text-align: center;
+                /* background-color: pink; */
+                padding-top: 100px; color: rgb(75, 75, 75);
+                /* margin: 0; padding: 0; */
+            }
+            header ul {
+                float: right;
+                position: absolute;
+                top: 35px; right: 0px;
+                font-size: 13px;
+                font-weight: bold;
+                color: gray;
+                margin: 0 auto;
+            }
+            header ul li {
+                display: inline-block;
+                margin-left: 15px;
+            }
+            nav {
+                width: 100%;
+                background-color: rgb(115, 166, 196, 60%);
+            }
+            nav ul {
+                margin: 10px;
+                padding-top: 10px;
+                /* background-color: red;; */
+            }
+            nav ul li {
+                background-color:rgb(255,255,255,40%);
+                margin-bottom: 5px;
+                font-size: 18px;
+                font-weight: bold;
+            }
+            nav ul li > span:first-child {
+                font-size: 20px;
+                display: inline-block;
+                width: 120px; height: 30px; line-height: 30px;
+                background-color: rgb(255,255,255,30%);
+            }
+            #submit_btn {
+                width: 120px; height: 30px; background-color: white; 
+                margin-left: 950px;margin-bottom: 10px;
+                font-weight: bold; font-size: 16px;
+                border-radius: 10px;
+            }
+            .category_name{
+                padding-left: 10px;
+            }
+            .checked_category p {
+                width: 140px;
+                height: 30px; line-height: 30px;
+                float: left;
+                border-radius: 10px;
+                margin-right: 10px;
+                background-color: rgb(47, 150, 209);
+                color: white; font-weight: bold; text-align: center;
+            }
+            .checked_category a {
+                display: inline-block;
+                margin-top: 15px; border-radius: 10px;
+                width: 140px; height: 30px; line-height: 30px;
+                background-color:rgb(153, 153, 153); color: white; font-weight: bold;
+                text-align: center;
+            }
+
+            section {
+                margin-top: 50px; margin-bottom: 50px;
+            }
+            article {
+                width: 100%;
+                height: 1515px;
+            }
+            .article_box{
+                width: 100%;
+                height: 363.75px;
+                float: left;
+                margin-bottom: 15px;
+            }
+            .article_box ul{
+                float: left;
+                width: 258.75px;
+                height: 100%;
+                margin-right: 15px; margin-bottom: 15px;
+                float: left;
+                background-color: rgb(240, 240, 240);
+                box-sizing: border-box;
+                border: 1px solid #ccc;
+            }
+            .article_box ul:nth-child(4n){margin-right: 0px;}
+            .article_box ul>li{padding: 0;}
+            .article_box ul>li:first-child{width:100%; height:258.75px;}
+            .article_box ul>li:last-child{width: 100%; height: 103px; 
+                background-color: whitesmoke;
+            }
+            .article_box ul>li span {
+                display: block;
+                margin-bottom: 5px;
+            }
+            .article_box ul>li span:first-child{
+                padding-top: 6px;
+            }
+            .article_box ul>li span:last-child{
+                margin-bottom: 0;
+            }
+            .article_box ul li:first-child{
+                line-height:258.75px;
+            }
+            img {
+                width: 100%;
+                height: 100%;
+                vertical-align: middle;
+            }
+            #mask_name {
+                display: block;
+                background-color: rgb(203, 224, 255, 40%);
+                height: 42px; 
+                width: 257px;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            .bottom {
+                width: 100%;
+                height: 200px;
+            }
+            .button {
+                margin: 0 auto;
+                width: 150px;
+                height: 40px;
+            }
+            .bottom .btn {
+                display: block;
+                float: left;
+                width: 70px; height: 40px; line-height: 40px;
+                text-align: center;
+                background-color: rgb(211, 211, 211);
+                border-radius: 13px 13px;
+                font-weight: bold;
+            }
+            .bottom .btn:last-child {
+                margin-left: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrap">
+            <header>
+                <h1 class="title">이런 마스크 어때요?</h1>
+                <div class="nav-item">
+                    <ul>
+                        <li>
+                            {% if check == 0 %}  <!-- 로그아웃 상태 -->
+                            <a href="/login">로그인</a>
+                            {% else %}           <!-- 로그인 상태 -->
+                            <a href="/logout">로그아웃</a>
+                            {% endif %}
+                        </li>
+                        <li>
+                            {% if check == 0 %}
+                            <a href="/join">회원가입</a>
+                            {% elif check == 1 %}
+                            <a href="/mypage">마이페이지</a>
+                            {% else %}
+                            <a href="/admin_page">관리자페이지</a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </header>
+            <nav>
+                <form action="/category" method="POST" id='form1'>
+                    <ul>
+                        <li>
+                            <span class="category_name">카테고리</span>
+                            <span class="category_list">
+                                먼지차단마스크<input type="radio" name="mask_category" value="먼지차단마스크">
+                                유아마스크<input type="radio" name="mask_category" value="유아마스크">
+                            </span>
+                        </li>
+                        <li>
+                            <span class="category_name">차단지수</span>
+                            <span class="category_list">
+                                KF99/N99<input type="radio" name="mask_blocking_grade" value="KF99/N99">
+                                KF94/N95<input type="radio" name="mask_blocking_grade" value="KF94/N95">
+                                KF-AD<input type="radio" name="mask_blocking_grade" value="KF-AD">
+                                KF80<input type="radio" name="mask_blocking_grade" value="KF80">
+                            </span>
+                        </li>
+                        <li>
+                            <span class="category_name">기능</span>
+                            <span class="category_list">
+                                미세먼지필터<input type="checkbox" name="mask_function_1" value="미세먼지필터">
+                                저자극<input type="checkbox" name="mask_function_2" value="저자극">
+                                일회용<input type="checkbox" name="mask_function_3" value="일회용">
+                                접이식<input type="checkbox" name="mask_function_4" value="접이식">
+                                자외선차단<input type="checkbox" name="mask_function_5" value="자외선차단">
+                                김서림방지<input type="checkbox" name="mask_function_6" value="김서림방지">
+                                방수<input type="checkbox" name="mask_function_7" value ="방수">
+                                방한<input type="checkbox" name="mask_function_8" value="방한">
+                            </span>
+                        </li>
+                        <li>
+                            <span class="category_name">가격</span>
+                            <span class="category_list">
+                                0 ~ 1000원<input type="radio" name="mask_price" value="0:1000">
+                                1000 ~ 2000원<input type="radio" name="mask_price" value="1000:2000">
+                                2000 ~ 5000원<input type="radio" name="mask_price" value="2000:5000">
+                                5000 ~ 10000원<input type="radio" name="mask_price" value="5000:10000">
+                                10000원 ~ 20000원<input type="radio" name="mask_price" value="10000:20000">
+                                20000원 ~ <input type="radio" name="mask_price" value="20000:999999999">
+                            </span>
+                        </li>
+                    </ul>
+                    <button id="submit_btn" type="button" onClick="storeData()">적용</button>
+                </form>
+            </nav>
+            <form action="/" method="POST" id="form2">
+                <div class="checked_category">
+                    {% if checked_list != None %}
+                        {% for i in range(checked_list|length) %}
+                        {% if checked_list[i] != None %}
+                            <p>{{ checked_list[i] }}</p>
+                        {% endif %}
+                        {% endfor %}
+                        <a href="/" onclick="category_reset();">검색 초기화</a>
+                    {% endif %}
+                </div>
+            </form>
+            <section>
+                <article>
+                    {% if mask_list|length == 16 %}
+                    <div class="article_box"> <!--mask_name, mask_price, star_rating, mask_url, pk_id-->
+                        {% for j in range(16) %}
+                        <ul id="mask_box">
+                            <li><a href="/goods?data={{mask_list[j][4]}}"><img src={{mask_list[j][3]}} alt="Mask Image"></a></li>
+                            <li><a href="/goods?data={{mask_list[j][4]}}">
+                                <span id="mask_name">{{mask_list[j][0]}}</span>
+                                <span>가격: {{mask_list[j][1]}}원</span>
+                                <span>별점: {{mask_list[j][2]}}</span>
+                            </a></li>
+                        </ul>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="article_box"> <!--mask_name, mask_price, star_rating, mask_url, pk_id-->
+                        {% for j in range((mask_list|length//16)*16, (mask_list|length//16)*16 + mask_list|length%16) %}
+                        <ul id="mask_box">
+                            <li><a href="/goods?data={{mask_list[j][4]}}"><img src={{mask_list[j][3]}} alt="Mask Image"></a></li>
+                            <li><a href="/goods?data={{mask_list[j][4]}}">
+                                <span id="mask_name">{{mask_list[j][0]}}</span>
+                                <span>가격: {{mask_list[j][1]}}</span>
+                                <span>별점: {{mask_list[j][2]}}</span>
+                            </a></li>
+                        </ul>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </article>
+            </section>
+            <div class="bottom">
+                <div class="button">
+                    <a href="/?page={{page_num-1}}" id="prev" class="btn">이전</a>
+                    <a href="/?page={{page_num+1}}" id="next" class="btn">다음</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script>
+    function storeData(){
+        try {
+            localStorage.setItem("mask_category", document.querySelector('input[name="mask_category"]:checked').value);
+        } catch(err){
+            localStorage.setItem("mask_category", 'None');
+        }
+        try {
+            localStorage.setItem("mask_blocking_grade", document.querySelector('input[name="mask_blocking_grade"]:checked').value);
+        } catch(err){
+            localStorage.setItem("mask_blocking_grade", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_1"]').checked) {
+            localStorage.setItem("mask_function_1", document.querySelector('input[name="mask_function_1"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_1", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_2"]').checked) {
+            localStorage.setItem("mask_function_2", document.querySelector('input[name="mask_function_2"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_2", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_3"]').checked) {
+            localStorage.setItem("mask_function_3", document.querySelector('input[name="mask_function_3"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_3", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_4"]').checked) {
+            localStorage.setItem("mask_function_4", document.querySelector('input[name="mask_function_4"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_4", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_5"]').checked) {
+            localStorage.setItem("mask_function_5", document.querySelector('input[name="mask_function_5"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_5", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_6"]').checked) {
+            localStorage.setItem("mask_function_6", document.querySelector('input[name="mask_function_6"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_6", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_7"]').checked) {
+            localStorage.setItem("mask_function_7", document.querySelector('input[name="mask_function_7"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_7", 'None');
+        }
+        if (document.querySelector('input[name="mask_function_8"]').checked) {
+            localStorage.setItem("mask_function_8", document.querySelector('input[name="mask_function_8"]:checked').value);
+        } else {
+            localStorage.setItem("mask_function_8", 'None');
+        }
+        try {
+            localStorage.setItem("mask_price", document.querySelector('input[name="mask_price"]:checked').value);
+        } catch(err){
+            localStorage.setItem("mask_price", 'None');
+        }
+        post_category();
+    }
+    function category_reset(){
+        localStorage.setItem("mask_category", 'None');
+        localStorage.setItem("mask_blocking_grade", 'None');
+        localStorage.setItem("mask_function_1", 'None');
+        localStorage.setItem("mask_function_2", 'None');
+        localStorage.setItem("mask_function_3", 'None');
+        localStorage.setItem("mask_function_4", 'None');
+        localStorage.setItem("mask_function_5", 'None');
+        localStorage.setItem("mask_function_6", 'None');
+        localStorage.setItem("mask_function_7", 'None');
+        localStorage.setItem("mask_function_8", 'None');
+        localStorage.setItem("mask_price", 'None');
+        post_category();
+    }
+    function post_category(){
+        var server_data = {
+            "mask_category": localStorage.getItem("mask_category"),
+            "mask_blocking_grade": localStorage.getItem("mask_blocking_grade"),
+            "mask_function": [
+                localStorage.getItem("mask_function_1"),
+                localStorage.getItem("mask_function_2"),
+                localStorage.getItem("mask_function_3"),
+                localStorage.getItem("mask_function_4"),
+                localStorage.getItem("mask_function_5"),
+                localStorage.getItem("mask_function_6"),
+                localStorage.getItem("mask_function_7"),
+                localStorage.getItem("mask_function_8")
+            ],
+            "mask_price": localStorage.getItem("mask_price")
+        }
+        $.ajax({
+            type: "POST",
+            url: "/category",
+            data: JSON.stringify(server_data),
+            contentType: "application/json;charset=UTF-8",
+            dataType: 'json',
+            success: function(data){
+                console.log("success");
+                console.log(data);
+                window.location.href = 'http://127.0.0.1:5000/';
+            },
+            error: function(xhr, textStatus, error){
+                console.log("error")
+                console.log(xhr.statusText);
+                console.log(textStatus);
+                console.log(error);
+            }
+        })
+    }
+</script>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>나의 리뷰</title>
+        <style>
+            button, input {background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer}
+            #home {
+                background-color: rgb(170, 231, 255);
+                width: 50px;
+                height: 50px;
+                border-radius: 10px;
+                position: absolute;
+                top: 20px; left:20px;
+            }
+            ul, li {list-style: none;padding:0;margin:0;}
+            .wrap {width: 500px; margin: 0 auto; padding: 20px; background-color: rgb(247, 247, 247);margin-top:50px;}
+            .review_table {
+                width: 500px;
+                height: 100%;
+            }
+            .review_row {
+                height: 150px;
+                background-color: rgb(235, 235, 235);
+                margin-bottom: 20px;
+            }
+            img {
+                width: 150px; height: 150px;
+            }
+            .review_contents {
+                position: relative;
+            }
+            .review_contents li {
+                float: left;
+            }
+            .img {
+                width: 100px; height:100px;
+            }
+            .mask_name, .star_rating, .review_text, .btn {
+                height: 37.5px;
+                width: 350px;
+                margin-left: 160px;
+                position: absolute;
+                line-height: 37.5px;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            .star_rating {
+                top: 37.5px;
+            }
+            .review_text {
+                top: 75px;
+            }
+            .btn {
+                top: 112.5px;
+            }
+            .btn a, #delete {
+                text-decoration: none;
+                color: inherit;
+                display: inline-block;
+                height: 30px; width: 50px;
+                text-align: center;
+                line-height: 35px;
+                border-radius: 10px;
+                margin-right: 5px;
+                background-color:rgb(140, 194, 255)
+            }
+            #delete {
+                background-color: gray;
+                color: white;
+                font-size: 16px;
+                position: absolute;
+                top: 2px; left:60px;
+            }
+        </style>
+    </head>
+    <body>
+        <button id="home" type="button" onclick="location.href='/'">홈</button>
+        <div class="wrap">
+            <h2>나의 리뷰</h2>
+            {% if user_review_list %}
+            <ul class="review_table">
+                {% for i in range(user_review_list|length) %}  <!-- mask_id, star_rating, review_text, img -->
+                <li class="review_row">
+                    <ul class="review_contents">
+                        <li class="img"><img src="data:image/png;base64, {{ user_review_img[i] }}" alt="my_review_image"></li>
+                        <li class="mask_name">마스크명: {{ user_review_list[i][0] }}</li>
+                        <li class="star_rating">별점: {{ user_review_list[i][1] }}</li>
+                        <li class="review_text">리뷰: {{ user_review_list[i][2] }}</li>
+                        <li class="btn">
+                            <a href="/modify_review?r_id={{user_review_list[i][-1]}}">수정</a>
+                            <!-- <a href="#">삭제</a> -->
+                            <form action="/myreview" method="POST">
+                                <input type="submit" name="delete" id="delete" value="삭제">
+                                <input type="hidden" name='r_id' value='{{user_review_list[i][-1]}}'>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+                <p>남긴 리뷰가 없습니다</p>
+            {% endif %}
+        </div>
+    </body>
+</html>

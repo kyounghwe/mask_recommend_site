@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <title>관리자 페이지</title>
+        <style>
+            button, input {background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer}
+            #home {
+                background-color: rgb(170, 231, 255);
+                width: 50px;
+                height: 50px;
+                border-radius: 10px;
+                position: absolute;
+                top: 20px; left:20px;
+            }
+            .wrap {
+                width: 900px;
+                height: 1000px;
+                margin: 0 auto;
+            }
+            .chart {
+                margin: 0 auto;
+                margin-bottom: 100px;
+                display: none;
+            }
+            .button_box{
+                margin: 0 auto;
+            }
+            h2 {
+                margin-top: 260px;
+            }
+            ul, li {
+                list-style: none; margin:0; padding: 0;
+            }
+            a {
+                text-decoration: none;
+                color: inherit;
+                display: block;
+            }
+            ul {
+                float: left; margin-right: 30px;
+            }
+            li {
+                width: 200px;
+                height: 30px; line-height: 30px; text-align: center;
+                background-color: rgb(223, 238, 255);
+                margin-bottom: 10px;
+                border-radius: 10px;
+            }
+            ul > p {
+                background-color: rgb(236, 235, 235);
+                border-radius: 10px;
+                height: 35px; line-height: 35px; text-align: center;
+                font-size: 20px; font-weight: bold;
+            }
+
+        </style>
+    </head>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script type="text/javascript">
+        function div_show1() {
+         document.getElementById("test_div1").style.display = "block";
+         document.getElementById("test_div2").style.display = "none";
+         document.getElementById("test_div3").style.display = "none";
+         document.getElementById("test_div4").style.display = "none";
+         document.getElementById("test_div5").style.display = "none";
+        }
+        function div_show2() {
+         document.getElementById("test_div1").style.display = "none";
+         document.getElementById("test_div2").style.display = "block";
+         document.getElementById("test_div3").style.display = "none";
+         document.getElementById("test_div4").style.display = "none";
+         document.getElementById("test_div5").style.display = "none";
+        }
+        function div_show3() {
+         document.getElementById("test_div1").style.display = "none";
+         document.getElementById("test_div2").style.display = "none";
+         document.getElementById("test_div3").style.display = "block";
+         document.getElementById("test_div4").style.display = "none";
+         document.getElementById("test_div5").style.display = "none";
+        }
+        function div_show4() {
+         document.getElementById("test_div1").style.display = "none";
+         document.getElementById("test_div2").style.display = "none";
+         document.getElementById("test_div3").style.display = "none";
+         document.getElementById("test_div4").style.display = "block";
+         document.getElementById("test_div5").style.display = "none";
+        }
+        function div_show5() {
+         document.getElementById("test_div1").style.display = "none";
+         document.getElementById("test_div2").style.display = "none";
+         document.getElementById("test_div3").style.display = "none";
+         document.getElementById("test_div4").style.display = "none";
+         document.getElementById("test_div5").style.display = "block";
+        }
+    </script>
+    <body>
+        <button id="home" type="button" onclick="location.href='/'">홈</button>
+        <div class="wrap">
+            <h1>관리자 페이지</h1>
+            <div class="button_box">
+                <ul>
+                    <p>상품 관리</p>
+                    <li><a href="#" onclick="div_show1()">리뷰 많은 순</a></li>
+                    <li><a href="#" onclick="div_show2()">별점+리뷰수 높은 순</a></li>
+                </ul>
+                <ul>
+                    <p>유저 관리</p>
+                    <li><a href="#" onclick="div_show3()">유저 성별 분포</a></li>
+                    <li><a href="#" onclick="div_show4()">유저 연령대 분포</a></li>
+                    <li><a href="#" onclick="div_show5()">유저 직업 분포</a></li>
+                </ul>
+            </div>
+            <div id="test_div1" class="chart" style="width: 900px;">
+                <h2>리뷰 많은 순</h2>
+                <canvas id="myChart1"></canvas>
+                <style type="text/css">
+                    .tg  {border-collapse:collapse;border-spacing:0;}
+                    .tg td{font-family:Arial, sans-serif;font-size:14px;
+                      overflow:hidden;padding:10px 5px;word-break:normal;}
+                    .tg th{font-family:Arial, sans-serif;font-size:14px;
+                      font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+                    .tg .tg-kftd{background-color:#efefef;text-align:left;vertical-align:top}
+                    .tg .tg-kwd9{background-color:#cae7f0;text-align:left;vertical-align:top}
+                    .tg .tg-0lax{text-align:left;vertical-align:top}
+                </style>
+                <table class="tg" style="width:900px; margin-top: 20px;">
+                    <thead>
+                      <tr>
+                        <th class="tg-kwd9">번호</th>
+                        <th class="tg-kwd9">마스크명</th>
+                        <th class="tg-kwd9">리뷰수</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for i in range(10) %}
+                      <tr>
+                        <td class="tg-kftd">{{i+1}}</td>
+                        <td class="tg-0lax">{{order_by_review_num_list[i][1]}}</td>
+                        <td class="tg-0lax">{{review_num_list[i]}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="test_div2" class="chart" style="width: 900px;">
+                <h2>별점 + 리뷰수 높은 순</h2>
+                <canvas id="myChart2"></canvas>
+                <style type="text/css">
+                    .tg  {border-collapse:collapse;border-spacing:0;}
+                    .tg td{font-family:Arial, sans-serif;font-size:14px;
+                      overflow:hidden;padding:10px 5px;word-break:normal;}
+                    .tg th{font-family:Arial, sans-serif;font-size:14px;
+                      font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+                    .tg .tg-kftd{background-color:#efefef;text-align:left;vertical-align:top}
+                    .tg .tg-kwd9{background-color:#cae7f0;text-align:left;vertical-align:top}
+                    .tg .tg-0lax{text-align:left;vertical-align:top}
+                </style>
+                <table class="tg" style="width:900px; margin-top: 20px;">
+                    <thead>
+                      <tr>
+                        <th class="tg-kwd9">번호</th>
+                        <th class="tg-kwd9">마스크명</th>
+                        <th class="tg-kwd9">별점</th>
+                        <th class="tg-kwd9">리뷰수</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for i in range(20) %}
+                      <tr>
+                        <td class="tg-kftd">{{i+1}}</td>
+                        <td class="tg-0lax">{{order_by_star_rating_review_num_list[i][1]}}</td>
+                        <td class="tg-0lax">{{sr_star_rating_list[i]}}</td>
+                        <td class="tg-0lax">{{sr_review_num_list[i]}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="test_div3" class="chart" style="width: 450px;">
+                <h2>유저 성별 분포</h2>
+                <canvas id="pieChartCanvas" width="300px" height="300px"></canvas>
+                <div id='legend-div' class="legend-div"></div>
+            </div>
+
+            <div id="test_div4" class="chart" style="width: 450px;">
+                <h2>유저 연령대 분포</h2>
+                <canvas id="myChart3" width="300px" height="300px"></canvas>
+                <div id='legend-div' class="legend-div"></div>
+            </div>
+
+            <div id="test_div5" class="chart" style="width: 450px;">
+                <h2>유저 직업 분포</h2>
+                <canvas id="myChart4" width="300px" height="300px"></canvas>
+                <div id='legend-div' class="legend-div"></div>
+            </div>
+        </div>
+
+        <!-- 차트 조정 -->
+        <script type="text/javascript">
+            // 첫 번째 차트
+            var context = document
+                .getElementById('myChart1')
+                .getContext('2d');
+            var review_num_data = {{ review_num_list|safe }};
+            var myChart = new Chart(context, {
+                type: 'bar', // 차트의 형태
+                data: { // 차트에 들어갈 데이터
+                    labels: [
+                        //x 축
+                        '1','2','3','4','5','6','7','8','9','10'
+                    ], yAxisID:'A',
+                    datasets: [
+                        { //데이터
+                            label: '리뷰수', //차트 제목
+                            fill: false, // line 형태일 때, 선 안쪽을 채우는지 안채우는지
+                            data: review_num_data, //x축 label에 대응되는 데이터 값
+                            backgroundColor: [
+                                //색상
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)'
+                            ],
+                            borderColor: [
+                                //경계선 색상
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)'
+                            ],
+                            borderWidth: 1 //경계선 굵기
+                        },
+                    ]
+                },
+                options: {
+                    scales: {
+                        yAxes: [
+                            {
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }
+                        ]
+                    }
+                }
+            });
+            
+            // 두 번째 차트
+            var context = document
+                .getElementById('myChart2')
+                .getContext('2d');
+            var sr_star_rating_list = {{ sr_star_rating_list|safe }};
+            var sr_review_num_list = {{ sr_review_num_list|safe }};
+            var myChart = new Chart(context, {
+                type: 'bar', // 차트의 형태
+                data: { // 차트에 들어갈 데이터
+                    labels: [
+                        //x 축
+                        '1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20'
+                    ],
+                    datasets: [
+                        { //데이터
+                            label: '별점', //차트 제목
+                            fill: false, // line 형태일 때, 선 안쪽을 채우는지 안채우는지
+                            data: sr_star_rating_list,
+                            backgroundColor: [
+                                //색상
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)'
+                            ],
+                            borderColor: [
+                                //경계선 색상
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)'
+                            ],
+                            borderWidth: 1 //경계선 굵기
+                        },
+                        {
+                            label: '리뷰수(x0.00005)', yAxisID:'B',
+                            fill: false,
+                            data: sr_review_num_list,
+                            backgroundColor: 'rgb(166, 170, 176)',
+                            borderColor: 'rgb(166, 170, 176)'
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        yAxes: [
+                            {   
+                                id: 'A',
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            },
+                            {   
+                                id: 'B',
+                                position: 'right',
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }
+                        ]
+                    }
+                }
+            });
+            
+            // 세 번째 차트(유저 성별)
+            var context = document
+                .getElementById('pieChartCanvas')
+                .getContext('2d');
+            var user_gender_count = {{ user_gender_count|safe }};
+            var myChart = new Chart(context, {
+                type: 'pie', // 차트의 형태
+                data: { // 차트에 들어갈 데이터
+                    labels: [
+                        //x 축
+                        'female','male'
+                    ],
+                    datasets: [
+                        { //데이터
+                            label: '성별', //차트 제목
+                            fill: false, // line 형태일 때, 선 안쪽을 채우는지 안채우는지
+                            data: user_gender_count, //x축 label에 대응되는 데이터 값
+                            backgroundColor: [
+                                //색상
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)'
+                            ],
+                            borderColor: [
+                                //경계선 색상
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderWidth: 1 //경계선 굵기
+                        },
+                    ]
+                }
+            });
+        
+            // 네 번째 차트
+            var context = document
+                .getElementById('myChart3')
+                .getContext('2d');
+            var user_age_count = {{ user_age_count|safe }};
+            var myChart = new Chart(context, {
+                type: 'bar', // 차트의 형태
+                data: { // 차트에 들어갈 데이터
+                    labels: [
+                        //x 축
+                        '0~9세','10~19세','20~29세','30~39세','40~49세','50~59세','60~69세','70세 이상'
+                    ],
+                    datasets: [
+                        { //데이터
+                            label: '명수', //차트 제목
+                            fill: false, // line 형태일 때, 선 안쪽을 채우는지 안채우는지
+                            data: user_age_count, //x축 label에 대응되는 데이터 값
+                            backgroundColor: [
+                                //색상
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)'
+                            ],
+                            borderColor: [
+                                //경계선 색상
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderWidth: 1 //경계선 굵기
+                        },
+                    ]
+                },
+                options: {
+                    scales: {
+                        yAxes: [
+                            {
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }
+                        ]
+                    }
+                }
+            });
+
+            // 다섯 번째 차트
+            var context = document
+                .getElementById('myChart4')
+                .getContext('2d');
+            var user_job_count = {{ user_job_count|safe }};
+            var myChart = new Chart(context, {
+                type: 'bar', // 차트의 형태
+                data: { // 차트에 들어갈 데이터
+                    labels: [
+                        //x 축
+                        '회사원','주부','학생','자영업','공무원','전문직','무직','기타'
+                    ],
+                    datasets: [
+                        { //데이터
+                            label: '명수', //차트 제목
+                            fill: false, // line 형태일 때, 선 안쪽을 채우는지 안채우는지
+                            data: user_job_count, //x축 label에 대응되는 데이터 값
+                            backgroundColor: [
+                                //색상
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)'
+                            ],
+                            borderColor: [
+                                //경계선 색상
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderWidth: 1 //경계선 굵기
+                        },
+                    ]
+                },
+                options: {
+                    scales: {
+                        yAxes: [
+                            {
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }
+                        ]
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
+

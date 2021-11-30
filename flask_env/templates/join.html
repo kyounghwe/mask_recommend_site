@@ -4,27 +4,36 @@
     <meta charset="UTF-8">
     <title>login</title>
     <style>
-        ul, li{list-style:none;padding:0;margin:0;}
-        a{text-decoration:none;color:inherit;}
+        button, input {background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer}
+        #home {
+                background-color: rgb(170, 231, 255);
+                width: 50px;
+                height: 50px;
+                border-radius: 10px;
+                position: absolute;
+                top: 20px; left:20px;
+        }
         body{margin-top: 50px;}
-        div.wrap{width: 390px; margin: 0 auto;}
-        fieldset{width:320px;margin:20px;font-size:12px;font-family:'dotum' sans-serif;border:none;position:relative;}
-        legend{position:absolute;left:-999px;}
-        .login .top li{padding-bottom:5px;}
-        .login .top li label{display:inline-block;width:60px;color:#444;font-weight:bold;}
-        .login .top li input[type="text"],
-        .login .top li input[type="password"]{width:146px;height:30px;border: 1px solid #ddd;}
-        .login .top li.btn{position: absolute;right: 0;top: 4px;}
-        .login .top li a{display:block;width:110px;height:70px;background:rgb(115, 166, 196);color:#fff;text-align:center;line-height:70px;font-weight:bold;font-size:17px;}
-        .login .bottom{padding: 30px 0 0 60px;}  /*top right bottom left*/
-        .login .bottom li{color:#666; line-height: 1.6;}
-        .login .bottom li a{color:rgb(115, 166, 196);font-weight:bold;text-decoration: underline;margin-left:10px;}
-        .login .bottom li:before{content:'';display:inline-block;width:4px;height:4px;background:gray;margin-right:5px;position:relative;top:-3px;}
+        button{background: inherit ; border: none; box-shadow: none; border-radius: 0; padding: 0; overflow: visible; cursor: pointer}
+        div.wrap{width: 372px; margin: 0 auto; padding: 30px; background-color: rgb(247, 247, 247);}
+        fieldset{width: 372px; margin: 20px; font-size: 12px; font-family: 'dotum' sans-serif; border: none; position: relative;}
+        legend{position: absolute; left: -999px;}
+        h1{padding-left: 40px; font-size: 30px; color: rgb(78, 78, 78);}
+        p{padding-bottom: 5px; margin-left: 10px;}
+        .join-element{display: inline-block; width: 80px; color: #444; font-weight: bold; font-size: 14px;}
+        .join input{width: 200px; height: 25px; border: 1px solid #ddd; font-size: 11px; padding-left: 5px;}
+        .btn button{width: 140px; height: 40px; margin-bottom: 13px;}
+        .btn button[type="submit"]{margin-left: 10px; background-color: rgb(115, 166, 196); color: white; font-size: 15px; font-weight: bold;}
+        .btn button[type="reset"]{color: black; background-color: white; border: 1px solid rgb(201, 201, 201); margin-left: 40px;}
+        .occupation-list{margin-left: 83px; display: inline-block;}
+        .special{position: absolute; bottom: 33px;}
+        select{width: 208px; border: 1px solid rgb(201, 201, 201);}
     </style>
 </head>
 <body>
+    <button id="home" type="button" onclick="location.href='/'">홈</button>
     <div class="wrap">
-        <form action = "/" method="POST">
+        <form action="/join" method="POST">
             <h1>회원가입</h1>
             <fieldset>
                 <legend>필수정보</legend>
@@ -36,6 +45,11 @@
                     <label for="pw" class="join-element">비밀번호</label>
                     <input type="password" id = "user_pw" name = "user_pw" placeholder="영문, 숫자 조합 8글자 이상">
                 </p>
+                <p> 
+                    <span class="join-element">성별</span>
+                    <label for="male">남성</label><input type="radio" name="gender" value="male" checked>
+                    <label for="female">여성</label><input type="radio" name="gender" value="female">
+                </p> 
                 <p>
                     <span class="join-element">연령대</span>
                     <select name="age-group">
@@ -62,17 +76,10 @@
                         기타<input type="radio" name="occupation" value="etc">
                     </span>
                 </p>
-                <p> 
-                    <span class="join-element">성별</span>
-                    <label for="male">남성</label><input type="radio" name="gender" value="male" checked>
-                    <label for="female">여성</label><input type="radio" name="gender" value="female">
-                </p>  
             </fieldset>
             <div class="btn">
-                <p>
-                    입력하고 제출버튼을 누르세요. <br>
-                    <input type = "submit" value = "제출"/> 
-                </p>
+                <button type="reset">취소</button>
+                <button type="submit">확인</button>
             </div>
         </form>
     </div>
