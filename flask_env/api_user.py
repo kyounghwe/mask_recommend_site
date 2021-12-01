@@ -70,17 +70,16 @@ def home():
                 temp = " ~ ".join(list(map(str, checked_list_for_html[-2:]))) + '원'
             checked_list_for_html = checked_list_for_html[:-2]
             checked_list_for_html.append(temp)
-            if checked_list[-1] != '':
-                if checked_list[-1] == 'keyword1':
-                    checked_list_for_html.append('편안함')
-                elif checked_list[-1] == 'keyword2':
-                    checked_list_for_html.append('빠른배송')
-                elif checked_list[-1] == 'keyword3':
-                    checked_list_for_html.append('재구매')
-                elif checked_list[-1] == 'keyword4':
-                    checked_list_for_html.append('가성비')
-                elif checked_list[-1] == 'keyword5':
-                    checked_list_for_html.append('부드러움')
+            if checked_list[-1] == 'keyword1':
+                checked_list_for_html.append('편안함')
+            elif checked_list[-1] == 'keyword2':
+                checked_list_for_html.append('빠른배송')
+            elif checked_list[-1] == 'keyword3':
+                checked_list_for_html.append('재구매')
+            elif checked_list[-1] == 'keyword4':
+                checked_list_for_html.append('가성비')
+            elif checked_list[-1] == 'keyword5':
+                checked_list_for_html.append('부드러움')
     elif checked_list[:-1] == ['', '', ['','','','','','','',''], ['','']] and checked_list[-1] != '':  # 카테고리 없고, 개인선호(추천)만 이용
         mask_list = select_keyword(checked_list[-1])
         checked_list_for_html = []
