@@ -1,10 +1,11 @@
 import pymysql
 
+
 def order_by_review_num():
     mask_db = pymysql.connect(
         user='root',
         passwd='5452tulahyo12!A',
-        host='127.0.0.1',
+        host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
     )
@@ -20,11 +21,12 @@ def order_by_review_num():
     mask_db.close()
     return rows
 
+
 def order_by_star_rating_review_num():
     mask_db = pymysql.connect(
         user='root',
         passwd='5452tulahyo12!A',
-        host='127.0.0.1',
+        host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
     )
