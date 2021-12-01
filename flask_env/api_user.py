@@ -70,6 +70,7 @@ def home():
                 temp = " ~ ".join(list(map(str, checked_list_for_html[-2:]))) + '원'
             checked_list_for_html = checked_list_for_html[:-2]
             checked_list_for_html.append(temp)
+        if checked_list[-1] != '':
             if checked_list[-1] == 'keyword1':
                 checked_list_for_html.append('편안함')
             elif checked_list[-1] == 'keyword2':
