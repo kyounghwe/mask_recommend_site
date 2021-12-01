@@ -1,5 +1,3 @@
-# 여기 있는 모든 정보는 조정해야 함
-# 코드를 짜기 위해 임시적으로 만든 것임
 from db_connect import db
 
 class tb_user_info(db.Model):
@@ -26,7 +24,7 @@ class tb_admin_info(db.Model):
         self.admin_id = admin_id
         self.admin_pw = admin_pw
 
-class tb_mask_data(db.Model):  # 구매링크 추가해야 함
+class tb_mask_data(db.Model):
     pk_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     mask_name = db.Column(db.String(50), nullable=False)
     mask_review_num = db.Column(db.Integer, nullable=False)
@@ -36,8 +34,7 @@ class tb_mask_data(db.Model):  # 구매링크 추가해야 함
     mask_blocking_grade = db.Column(db.String(20), nullable=False)
     mask_function = db.Column(db.String(80), nullable=False)
     mask_img_link = db.Column(db.String(300), nullable=False)
-    mask_purchase_link = db.Column(db.String(300), nullable=False)
-
+    mask_purchase_link = db.Column(db.String(2000), nullable=False)
 
     def __init__(self, mask_name, mask_review_num, mask_star_rating, mask_price, mask_category, mask_blocking_grade, mask_function, mask_img_link, mask_purchase_link):
         self.mask_name = mask_name
@@ -50,7 +47,7 @@ class tb_mask_data(db.Model):  # 구매링크 추가해야 함
         self.mask_img_link = mask_img_link
         self.mask_purchase_link = mask_purchase_link
 
-class tb_review(db.Model):  # 임의로 써놓은 것이기 때문에 조정 필요! 그냥 해놓은 거임
+class tb_review(db.Model):
     pk_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     mask_id = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, nullable=False)
@@ -81,3 +78,18 @@ class tb_zzim(db.Model):
     def __init__(self, mask_id, user_id):
         self.mask_id = mask_id
         self.user_id = user_id
+
+class tb_review_keyword(db.Model):
+    pk_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    option1 = db.Column(db.Float, nullable=False)
+    option2 = db.Column(db.Float, nullable=False)
+    option3 = db.Column(db.Float, nullable=False)
+    option4 = db.Column(db.Float, nullable=False)
+    option5 = db.Column(db.Float, nullable=False)
+
+    def __init__(self, option1, option2, option3, option4, option5):
+        self.option1 = option1
+        self.option2 = option2
+        self.option3 = option3
+        self.option4 = option4
+        self.option5 = option5

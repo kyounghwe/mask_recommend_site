@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from models import tb_user_info
 from db_connect import db
 from read_mysql import read_mask_data
-from read_mysql_select import select_category
+from read_mysql_select import select_category, select_keyword
 
 user = Blueprint('user', __name__)
 
@@ -21,13 +21,14 @@ def home():
             request.cookies.get('mask_category'),
             request.cookies.get('mask_blocking_grade'),
             [request.cookies.get('mask_function_1'),request.cookies.get('mask_function_2'),request.cookies.get('mask_function_3'),request.cookies.get('mask_function_4'),request.cookies.get('mask_function_5'),request.cookies.get('mask_function_6'),request.cookies.get('mask_function_7'),request.cookies.get('mask_function_8')],
-            request.cookies.get('mask_price')
+            request.cookies.get('mask_price'),
+            request.cookies.get('recommend')
         ]
-        mask_category = [data[0] if data[0] != 'None' else ''][0]
-        mask_blocking_grade = [data[1] if data[1] != 'None' else ''][0]
+        mask_category = [data[0] if data[0] not in ['None', None] else ''][0]
+        mask_blocking_grade = [data[1] if data[1] not in ['None', None] else ''][0]
         mask_function = []
         for i in data[2]:
-            if i == 'None':
+            if i in ['None', None]:
                 mask_function.append('')
             else:
                 mask_function.append(i)
@@ -35,15 +36,20 @@ def home():
             mask_price = list(map(int, data[3].split(":")))
         except:
             mask_price = ['','']
+        if data[-1] in ['None', None]:
+            recommend = ''
+        else:
+            recommend = data[-1]
     except:
         mask_category = ''
         mask_blocking_grade = ''
         mask_function = ['','','','','','','','']
         mask_price = ['','']
+        recommend = ''
 
     # 선택한 카테고리로 마스크데이터 필터해서 가져오기
-    checked_list = [mask_category, mask_blocking_grade, mask_function, mask_price]
-    if checked_list != ['', '', ['','','','','','','',''], ['','']]:
+    checked_list = [mask_category, mask_blocking_grade, mask_function, mask_price, recommend]
+    if checked_list[:-1] != ['', '', ['','','','','','','',''], ['','']]:
         mask_list = select_category(checked_list)
         checked_list_for_html = []
         for i in checked_list[:-1]:
@@ -55,14 +61,39 @@ def home():
                         checked_list_for_html.append(j)
             else:
                 checked_list_for_html.append(i)
-        if checked_list[-1] != ['','']:
-            checked_list_for_html += checked_list[-1]
-            if checked_list_for_html[-1] == '999999999':
+        if checked_list[-2] != ['','']:
+            if checked_list_for_html[-1] == 999999999:
                 temp = "20000원 이상"
+            elif checked_list_for_html[-1] == 1000:
+                temp = "0 ~ 1000원"
             else:
                 temp = " ~ ".join(list(map(str, checked_list_for_html[-2:]))) + '원'
             checked_list_for_html = checked_list_for_html[:-2]
             checked_list_for_html.append(temp)
+            if checked_list[-1] != '':
+                if checked_list[-1] == 'keyword1':
+                    checked_list_for_html.append('편안함')
+                elif checked_list[-1] == 'keyword2':
+                    checked_list_for_html.append('빠른배송')
+                elif checked_list[-1] == 'keyword3':
+                    checked_list_for_html.append('재구매')
+                elif checked_list[-1] == 'keyword4':
+                    checked_list_for_html.append('가성비')
+                elif checked_list[-1] == 'keyword5':
+                    checked_list_for_html.append('부드러움')
+    elif checked_list[:-1] == ['', '', ['','','','','','','',''], ['','']] and checked_list[-1] != '':  # 카테고리 없고, 개인선호(추천)만 이용
+        mask_list = select_keyword(checked_list[-1])
+        checked_list_for_html = []
+        if checked_list[-1] == 'keyword1':
+            checked_list_for_html.append('편안함')
+        elif checked_list[-1] == 'keyword2':
+            checked_list_for_html.append('빠른배송')
+        elif checked_list[-1] == 'keyword3':
+            checked_list_for_html.append('재구매')
+        elif checked_list[-1] == 'keyword4':
+            checked_list_for_html.append('가성비')
+        elif checked_list[-1] == 'keyword5':
+            checked_list_for_html.append('부드러움')
     else:  # 선택한 카테고리가 없는 경우 마스크데이터 그냥 가져오기
         checked_list = None
         checked_list_for_html = None
@@ -109,6 +140,8 @@ def setcookie():
         except: resp.set_cookie('mask_function_8', 'None')
         try: resp.set_cookie('mask_price', request.form.get('mask_price')) 
         except: resp.set_cookie('mask_price', 'None')
+        try: resp.set_cookie('recommend', request.form.get('recommend')) 
+        except: resp.set_cookie('recommend', 'None')
         return resp
 # 쿠키 리셋
 @user.route("/resetcookie", methods=["POST"])
@@ -126,6 +159,7 @@ def resetcookie():
         resp.set_cookie('mask_function_7', 'None')
         resp.set_cookie('mask_function_8', 'None')
         resp.set_cookie('mask_price', 'None')
+        resp.set_cookie('recommend', 'None')
         return resp
 
 # 회원가입 페이지

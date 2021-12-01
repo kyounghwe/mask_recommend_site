@@ -3,7 +3,6 @@
 마이페이지 / 마이페이지-리뷰목록 / 마이페이지-찜목록 '''
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from read_mysql import get_user, get_my_review, get_my_zzim
-from models import tb_user_info
 
 from db_connect import db, engine, buffer, conn, cursor
 import pandas as pd
@@ -92,4 +91,3 @@ def myzzim():
             conn.commit()
             conn.close()
         return redirect(url_for('user_page.myzzim'))
-    # return render_template("my_page_zzim.html")
