@@ -7,8 +7,15 @@
             body{
                 background-size: 50px 50px;
             }
-            button{background: inherit ; border: none; box-shadow: none; border-radius: 0; padding: 0; overflow: visible; cursor: pointer}
-            
+            button, input {background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer}
+            #home {
+                background-color: rgb(170, 231, 255);
+                width: 50px;
+                height: 50px;
+                border-radius: 10px;
+                position: absolute;
+                top: 20px; left:20px;
+            }
             .wrap{
                 width: 600px;
                 margin: 0 auto;
@@ -100,6 +107,7 @@
         </style>
     </head>
     <body>
+        <button id="home" type="button" onclick="location.href='/'">홈</button>
         <div class="wrap">
             <form action = "/review" method="POST" enctype="multipart/form-data">
                 <h1>리뷰 작성</h1>

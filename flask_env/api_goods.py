@@ -23,6 +23,36 @@ def goods_info():
             mask_id = session['mask_id']
         mask_data_list = read_mask_page_data(mask_id)
         review_list = read_review_data(mask_id)
+        option = []
+        option_list = []
+        for i in review_list:  # 5,6,7,8
+            # 부드러움
+            if i[5] == 1: option_list.append('매우뻣뻣')
+            elif i[5] == 2: option_list.append('뻣뻣')
+            elif i[5] == 3: option_list.append('보통')
+            elif i[5] == 4: option_list.append('좋음')
+            elif i[5] == 5: option_list.append('매우좋음')
+            # 크기
+            if i[6] == 1: option_list.append('매우작음')
+            elif i[6] == 2: option_list.append('작음')
+            elif i[6] == 3: option_list.append('보통')
+            elif i[6] == 4: option_list.append('큼')
+            elif i[6] == 5: option_list.append('매우큼')
+            # 내구성
+            if i[7] == 1: option_list.append('매우나쁨')
+            elif i[7] == 2: option_list.append('나쁨')
+            elif i[7] == 3: option_list.append('보통')
+            elif i[7] == 4: option_list.append('좋음')
+            elif i[7] == 5: option_list.append('매우좋음')
+            # 숨쉬기
+            if i[8] == 1: option_list.append('매우나쁨')
+            elif i[8] == 2: option_list.append('나쁨')
+            elif i[8] == 3: option_list.append('보통')
+            elif i[8] == 4: option_list.append('좋음')
+            elif i[8] == 5: option_list.append('매우좋음')
+            option.append(option_list)
+            option_list = []
+        
         ### 이미지 데이터 불러오기
         img_list=[]
         show = tb_review.query.all()
@@ -42,7 +72,7 @@ def goods_info():
         session['mask_id'] = mask_id
         session['user_pk_id'] = user_id
 
-        return render_template('goods.html', mask_data_list=mask_data_list, review_list=review_list, img_data=img_list, user_id=user_id)
+        return render_template('goods.html', mask_data_list=mask_data_list, review_list=review_list, option=option, img_data=img_list, user_id=user_id)
     else:  # 찜
         mask_id = session['mask_id']
         user_id = session['user_pk_id']

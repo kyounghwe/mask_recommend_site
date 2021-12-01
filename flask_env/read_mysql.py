@@ -125,7 +125,7 @@ def get_my_zzim(data):
     )
     cursor = mask_db.cursor()
     sql = f'''
-            SELECT b.mask_name, a.pk_id
+            SELECT b.mask_name, a.pk_id, b.pk_id
             FROM tb_zzim AS a
             INNER JOIN tb_mask_data AS b
             ON a.mask_id = b.pk_id

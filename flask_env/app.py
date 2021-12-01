@@ -13,7 +13,7 @@ from api_user import user
 from api_goods import goods
 from api_user_page import user_page
 from api_admin_page import admin_page
-import cgi
+# import cgi
 
 # form = cgi.FieldStorage()
 

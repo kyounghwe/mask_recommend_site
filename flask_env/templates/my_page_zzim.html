@@ -76,14 +76,14 @@
             <h2>나의 찜</h2>
             {% if user_zzim_list %}
             <ul class="review_table">
-                {% for i in range(user_zzim_list|length) %}  <!-- mask_id, pk_id -->
+                {% for i in range(user_zzim_list|length) %}  <!-- mask_id, pk_id(리뷰), pk_id(마스크) -->
                 <li class="review_row">
                     <ul class="review_contents">
-                        <li class="mask_name"><a href="#">{{ user_zzim_list[i][0] }}</a></li>
+                        <li class="mask_name"><a href="/goods?data={{user_zzim_list[i][2]}}">{{ user_zzim_list[i][0] }}</a></li>
                         <li class="btn">
                             <form action="/myzzim" method="POST">
                                 <input type="submit" name="delete" id="delete" value="삭제">
-                                <input type="hidden" name='r_id' value='{{user_zzim_list[i][-1]}}'>
+                                <input type="hidden" name='r_id' value='{{user_zzim_list[i][1]}}'>
                             </form>
                         </li>
                     </ul>

@@ -12,7 +12,6 @@
                 width: 1080px;
                 margin: 0 auto;
             }
-            /* body {background-color: rgb(240, 240, 240);} */
             header {
                 width: 100%; height: 250px;
                 background-color: white;
@@ -21,9 +20,7 @@
             }
             header h1 {
                 text-align: center;
-                /* background-color: pink; */
                 padding-top: 100px; color: rgb(75, 75, 75);
-                /* margin: 0; padding: 0; */
             }
             header ul {
                 float: right;
@@ -77,14 +74,14 @@
                 background-color: rgb(47, 150, 209);
                 color: white; font-weight: bold; text-align: center;
             }
-            .checked_category a {
+            #reset_btn {
                 display: inline-block;
-                margin-top: 15px; border-radius: 10px;
+                margin-top: 16px; border-radius: 10px;
                 width: 140px; height: 30px; line-height: 30px;
                 background-color:rgb(153, 153, 153); color: white; font-weight: bold;
                 text-align: center;
+                font-size: 15px;
             }
-
             section {
                 margin-top: 50px; margin-bottom: 50px;
             }
@@ -192,7 +189,7 @@
                 </div>
             </header>
             <nav>
-                <form action="/category" method="POST" id='form1'>
+                <form action="/setcookie" method="POST" id='form1' credentials='include'>
                     <ul>
                         <li>
                             <span class="category_name">카테고리</span>
@@ -235,10 +232,10 @@
                             </span>
                         </li>
                     </ul>
-                    <button id="submit_btn" type="button" onClick="storeData()">적용</button>
+                    <button id="submit_btn" type="submit">적용</button>
                 </form>
             </nav>
-            <form action="/" method="POST" id="form2">
+            <form action="/resetcookie" method="POST" id="form2">
                 <div class="checked_category">
                     {% if checked_list != None %}
                         {% for i in range(checked_list|length) %}
@@ -246,7 +243,7 @@
                             <p>{{ checked_list[i] }}</p>
                         {% endif %}
                         {% endfor %}
-                        <a href="/" onclick="category_reset();">검색 초기화</a>
+                        <button id="reset_btn" type="submit">검색 초기화</button>
                     {% endif %}
                 </div>
             </form>
@@ -290,113 +287,3 @@
         </div>
     </body>
 </html>
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script>
-    function storeData(){
-        try {
-            localStorage.setItem("mask_category", document.querySelector('input[name="mask_category"]:checked').value);
-        } catch(err){
-            localStorage.setItem("mask_category", 'None');
-        }
-        try {
-            localStorage.setItem("mask_blocking_grade", document.querySelector('input[name="mask_blocking_grade"]:checked').value);
-        } catch(err){
-            localStorage.setItem("mask_blocking_grade", 'None');
-        }
-        if (document.querySelector('input[name="mask_function_1"]').checked) {
-            localStorage.setItem("mask_function_1", document.querySelector('input[name="mask_function_1"]:checked').value);
-        } else {
-            localStorage.setItem("mask_function_1", 'None');
-        }
-        if (document.querySelector('input[name="mask_function_2"]').checked) {
-            localStorage.setItem("mask_function_2", document.querySelector('input[name="mask_function_2"]:checked').value);
-        } else {
-            localStorage.setItem("mask_function_2", 'None');
-        }
-        if (document.querySelector('input[name="mask_function_3"]').checked) {
-            localStorage.setItem("mask_function_3", document.querySelector('input[name="mask_function_3"]:checked').value);
-        } else {
-            localStorage.setItem("mask_function_3", 'None');
-        }
-        if (document.querySelector('input[name="mask_function_4"]').checked) {
-            localStorage.setItem("mask_function_4", document.querySelector('input[name="mask_function_4"]:checked').value);
-        } else {
-            localStorage.setItem("mask_function_4", 'None');
-        }
-        if (document.querySelector('input[name="mask_function_5"]').checked) {
-            localStorage.setItem("mask_function_5", document.querySelector('input[name="mask_function_5"]:checked').value);
-        } else {
-            localStorage.setItem("mask_function_5", 'None');
-        }
-        if (document.querySelector('input[name="mask_function_6"]').checked) {
-            localStorage.setItem("mask_function_6", document.querySelector('input[name="mask_function_6"]:checked').value);
-        } else {
-            localStorage.setItem("mask_function_6", 'None');
-        }
-        if (document.querySelector('input[name="mask_function_7"]').checked) {
-            localStorage.setItem("mask_function_7", document.querySelector('input[name="mask_function_7"]:checked').value);
-        } else {
-            localStorage.setItem("mask_function_7", 'None');
-        }
-        if (document.querySelector('input[name="mask_function_8"]').checked) {
-            localStorage.setItem("mask_function_8", document.querySelector('input[name="mask_function_8"]:checked').value);
-        } else {
-            localStorage.setItem("mask_function_8", 'None');
-        }
-        try {
-            localStorage.setItem("mask_price", document.querySelector('input[name="mask_price"]:checked').value);
-        } catch(err){
-            localStorage.setItem("mask_price", 'None');
-        }
-        post_category();
-    }
-    function category_reset(){
-        localStorage.setItem("mask_category", 'None');
-        localStorage.setItem("mask_blocking_grade", 'None');
-        localStorage.setItem("mask_function_1", 'None');
-        localStorage.setItem("mask_function_2", 'None');
-        localStorage.setItem("mask_function_3", 'None');
-        localStorage.setItem("mask_function_4", 'None');
-        localStorage.setItem("mask_function_5", 'None');
-        localStorage.setItem("mask_function_6", 'None');
-        localStorage.setItem("mask_function_7", 'None');
-        localStorage.setItem("mask_function_8", 'None');
-        localStorage.setItem("mask_price", 'None');
-        post_category();
-    }
-    function post_category(){
-        var server_data = {
-            "mask_category": localStorage.getItem("mask_category"),
-            "mask_blocking_grade": localStorage.getItem("mask_blocking_grade"),
-            "mask_function": [
-                localStorage.getItem("mask_function_1"),
-                localStorage.getItem("mask_function_2"),
-                localStorage.getItem("mask_function_3"),
-                localStorage.getItem("mask_function_4"),
-                localStorage.getItem("mask_function_5"),
-                localStorage.getItem("mask_function_6"),
-                localStorage.getItem("mask_function_7"),
-                localStorage.getItem("mask_function_8")
-            ],
-            "mask_price": localStorage.getItem("mask_price")
-        }
-        $.ajax({
-            type: "POST",
-            url: "/category",
-            data: JSON.stringify(server_data),
-            contentType: "application/json;charset=UTF-8",
-            dataType: 'json',
-            success: function(data){
-                console.log("success");
-                console.log(data);
-                window.location.href = 'http://127.0.0.1:5000/';
-            },
-            error: function(xhr, textStatus, error){
-                console.log("error")
-                console.log(xhr.statusText);
-                console.log(textStatus);
-                console.log(error);
-            }
-        })
-    }
-</script>

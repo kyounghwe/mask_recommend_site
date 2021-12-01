@@ -30,7 +30,6 @@ def myreview():
     else:  # 삭제 버튼 누른 경우
         if request.form['delete']:
             r_id = request.form['r_id']
-            print(r_id)
             sql = '''DELETE FROM tb_review where pk_id=%s'''
             cursor.execute(sql, r_id)
             conn.commit()
@@ -41,7 +40,6 @@ def myreview():
 def modify_review():
     if request.method == 'POST':
         r_id = request.form['r_id']
-        print(r_id)
         if not request.files.get('review_image'):
             img_data = 'static/img/no_image.png'
         else:
@@ -83,13 +81,12 @@ def modify_review():
 def myzzim():
     if request.method == "GET":
         user_num_id = get_user(session['user_id'])[0][0]
-        user_zzim_list = get_my_zzim(user_num_id)  # mask_id, star_rating, review_text, img, pk_id(리뷰)
+        user_zzim_list = get_my_zzim(user_num_id)  # mask_name, pk_id(리뷰), pk_id(마스크)
         return render_template('my_page_zzim.html', user_zzim_list=user_zzim_list)
     
     else:  # 삭제 버튼 누른 경우
         if request.form['delete']:
             r_id = request.form['r_id']
-            print(r_id)
             sql = '''DELETE FROM tb_zzim where pk_id=%s'''
             cursor.execute(sql, r_id)
             conn.commit()

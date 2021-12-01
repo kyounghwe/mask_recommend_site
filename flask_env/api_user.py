@@ -1,38 +1,47 @@
 ''' api_user.py
 
 메인 / 회원가입 / 로그인 / 로그아웃 '''
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, make_response
 from models import tb_user_info
 from db_connect import db
 from read_mysql import read_mask_data
-from read_mysql_select import select_category, save_selected_category, get_selected_category
-import json
+from read_mysql_select import select_category
 
 user = Blueprint('user', __name__)
 
 # 메인 페이지
-@user.route('/', methods=["GET", "POST"])
+@user.route('/', methods=["GET", "POST", "PUT"])
 def home():
     # 로그인 여부 확인
     if not session.get('logged_in'): session['check'] = 0
-    # else: check = 1  # 로그인 된 신호를 프론트에 줘야 함 -> 로그인 해야 리뷰, 별점, 찜 등의 기능 이용 가능
-
-    data = get_selected_category()
-    if data == ():
+    
+    # 쿠키로 선택한 카테고리 데이터 가져오기
+    try:
+        data = [
+            request.cookies.get('mask_category'),
+            request.cookies.get('mask_blocking_grade'),
+            [request.cookies.get('mask_function_1'),request.cookies.get('mask_function_2'),request.cookies.get('mask_function_3'),request.cookies.get('mask_function_4'),request.cookies.get('mask_function_5'),request.cookies.get('mask_function_6'),request.cookies.get('mask_function_7'),request.cookies.get('mask_function_8')],
+            request.cookies.get('mask_price')
+        ]
+        mask_category = [data[0] if data[0] != 'None' else ''][0]
+        mask_blocking_grade = [data[1] if data[1] != 'None' else ''][0]
+        mask_function = []
+        for i in data[2]:
+            if i == 'None':
+                mask_function.append('')
+            else:
+                mask_function.append(i)
+        try: 
+            mask_price = list(map(int, data[3].split(":")))
+        except:
+            mask_price = ['','']
+    except:
         mask_category = ''
         mask_blocking_grade = ''
         mask_function = ['','','','','','','','']
         mask_price = ['','']
-    else:
-        mask_category = data[0][0]
-        mask_blocking_grade = data[0][1]
-        mask_function = [data[0][2],data[0][3],data[0][4],data[0][5],data[0][6],data[0][7],data[0][8],data[0][9]]
-        try: 
-            mask_price = list(map(int, data[0][10].split(":")))
-        except:
-            mask_price = ['','']
 
-    # 선택한 카테고리가 있는 경우
+    # 선택한 카테고리로 마스크데이터 필터해서 가져오기
     checked_list = [mask_category, mask_blocking_grade, mask_function, mask_price]
     if checked_list != ['', '', ['','','','','','','',''], ['','']]:
         mask_list = select_category(checked_list)
@@ -54,7 +63,7 @@ def home():
                 temp = " ~ ".join(list(map(str, checked_list_for_html[-2:]))) + '원'
             checked_list_for_html = checked_list_for_html[:-2]
             checked_list_for_html.append(temp)
-    else:  # 없는 경우
+    else:  # 선택한 카테고리가 없는 경우 마스크데이터 그냥 가져오기
         checked_list = None
         checked_list_for_html = None
         mask_list = read_mask_data()
@@ -73,29 +82,51 @@ def home():
     
     return render_template("main.html", check=session['check'], mask_list=mask_list, page_num=session['page_num'], checked_list=checked_list_for_html)
 
-# 카테고리 선택
-@user.route('/category', methods=["GET","POST"])
-def category():
+# 쿠키 세팅
+@user.route("/setcookie", methods=["POST"])
+def setcookie():
     if request.method == "POST":
-        try:
-            category_data = request.get_json("server_data")
-            mask_category = ['' if category_data['mask_category'] == 'None' else category_data['mask_category']][0]
-            mask_blocking_grade = ['' if category_data['mask_blocking_grade'] == 'None' else category_data['mask_blocking_grade']][0]
-            mask_function = [['','','','','','','',''] if category_data['mask_function'] == ['None','None','None','None','None','None','None','None'] else category_data['mask_function']][0]
-            for i in range(8):
-                if mask_function[i] == 'None':
-                    mask_function[i] = ''
-            mask_price = ['' if category_data['mask_price'] == 'None' else category_data['mask_price']][0]
-        except:
-            mask_category = ''
-            mask_blocking_grade = ''
-            mask_function = ['', '', '', '', '', '', '', '']
-            mask_price = ''
-        data = [mask_category, mask_blocking_grade, mask_function, mask_price]
-        save_selected_category(data)
-        return json.dumps({"mask_category":mask_category, "mask_blocking_grade":mask_blocking_grade, "mask_function":mask_function, "mask_price":mask_price})
-    else:
-        return 'hello'
+        resp = make_response(redirect(url_for('user.home')))
+        try: resp.set_cookie('mask_category', request.form.get('mask_category')) 
+        except: resp.set_cookie('mask_category', 'None')
+        try: resp.set_cookie('mask_blocking_grade', request.form.get('mask_blocking_grade'))
+        except: resp.set_cookie('mask_blocking_grade', 'None')
+        try: resp.set_cookie('mask_function_1', request.form.get('mask_function_1'))
+        except: resp.set_cookie('mask_function_1', 'None')
+        try: resp.set_cookie('mask_function_2', request.form.get('mask_function_2'))
+        except: resp.set_cookie('mask_function_2', 'None')
+        try: resp.set_cookie('mask_function_3', request.form.get('mask_function_3'))
+        except: resp.set_cookie('mask_function_3', 'None')
+        try: resp.set_cookie('mask_function_4', request.form.get('mask_function_4'))
+        except: resp.set_cookie('mask_function_4', 'None')
+        try: resp.set_cookie('mask_function_5', request.form.get('mask_function_5'))
+        except: resp.set_cookie('mask_function_5', 'None')
+        try: resp.set_cookie('mask_function_6', request.form.get('mask_function_6'))
+        except: resp.set_cookie('mask_function_6', 'None')
+        try: resp.set_cookie('mask_function_7', request.form.get('mask_function_7'))
+        except: resp.set_cookie('mask_function_7', 'None')
+        try: resp.set_cookie('mask_function_8', request.form.get('mask_function_8'))
+        except: resp.set_cookie('mask_function_8', 'None')
+        try: resp.set_cookie('mask_price', request.form.get('mask_price')) 
+        except: resp.set_cookie('mask_price', 'None')
+        return resp
+# 쿠키 리셋
+@user.route("/resetcookie", methods=["POST"])
+def resetcookie():
+    if request.method == "POST":
+        resp = make_response(redirect(url_for('user.home')))
+        resp.set_cookie('mask_category', 'None')
+        resp.set_cookie('mask_blocking_grade', 'None')
+        resp.set_cookie('mask_function_1', 'None')
+        resp.set_cookie('mask_function_2', 'None')
+        resp.set_cookie('mask_function_3', 'None')
+        resp.set_cookie('mask_function_4', 'None')
+        resp.set_cookie('mask_function_5', 'None')
+        resp.set_cookie('mask_function_6', 'None')
+        resp.set_cookie('mask_function_7', 'None')
+        resp.set_cookie('mask_function_8', 'None')
+        resp.set_cookie('mask_price', 'None')
+        return resp
 
 # 회원가입 페이지
 ### 아이디와 비밀번호 조건 추가해야 함 -> 조건에 맞지 않으면 alert
@@ -151,8 +182,5 @@ def logout():
     session['logged_in'] = False
     session['user_id'] = None
     session['admin_id'] = None
-    # errMsg = None
     session['check'] = 0
-    # mask_list = read_mask_data()
-    # return render_template('main.html', check=session['check'], mask_list=mask_list, page_num=session['page_num'])
     return redirect(url_for('user.home'))
