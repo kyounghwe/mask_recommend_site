@@ -28,4 +28,4 @@ app.register_blueprint(user_page)
 app.register_blueprint(admin_page)
 
 if __name__ == "__main__":
-    app.run(host='127.0.0.1',port=5000, debug=True)
+    app.run(host='ec2-54-180-30-125.ap-northeast-2.compute.amazonaws.com',port=5000, debug=True)
