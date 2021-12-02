@@ -38,7 +38,7 @@ def modify_review():
     if request.method == 'POST':
         r_id = request.form['r_id']
         if not request.files.get('review_image'):
-            img_data = 'static/img/no_image.png'
+            img_data = '/root/mask/flask_env/static/img/no_image.png'
         else:
             tmp_img_data = request.files['review_image']
             im= Image.open(tmp_img_data)
