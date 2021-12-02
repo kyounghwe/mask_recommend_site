@@ -9,6 +9,8 @@
 
 - data_analysis_env
     - 데이터 수집, 분석과 관련된 코드
+- Docker_image
+    - 도커 환경
 - flask_env
     - 웹서버 구동과 관련된 코드
 
