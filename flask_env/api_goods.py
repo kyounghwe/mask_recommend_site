@@ -105,7 +105,7 @@ def write_review():
             img = base64.b64encode(buffer.getvalue())
 
         else:
-            tmp_img_data = 'static/img/no_image.png'
+            tmp_img_data = '/root/mask/flask_env/static/img/no_image.png'
             im= Image.open(tmp_img_data)
             im.save(buffer, format='png')
             img = base64.b64encode(buffer.getvalue())

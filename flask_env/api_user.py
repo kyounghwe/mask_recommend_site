@@ -10,7 +10,7 @@ from read_mysql_select import select_category, select_keyword
 user = Blueprint('user', __name__)
 
 # 메인 페이지
-@user.route('/', methods=["GET", "POST", "PUT"])
+@user.route('/', methods=["GET", "POST"])
 def home():
     # 로그인 여부 확인
     if not session.get('logged_in'): session['check'] = 0
