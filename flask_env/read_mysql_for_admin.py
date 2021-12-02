@@ -3,7 +3,7 @@ import pymysql
 def order_by_review_num():
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -23,7 +23,7 @@ def order_by_review_num():
 def order_by_star_rating_review_num():
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
