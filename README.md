@@ -17,7 +17,7 @@
 ## 동작 방식
 
 - data_analysis_env
-    - 디렉토리 내에 main.py를 실행합니다.
-    - 이후 결과는 result.csv 파일로 저장, 출력됩니다.
+    - 디렉토리 내에 mask_crawling.py를 실행합니다.
+    - 이후 결과는 mask_data_final.csv 파일로 저장, 출력됩니다.
 - flask_env
     - 디렉토리 내에 app.py를 실행합니다.
