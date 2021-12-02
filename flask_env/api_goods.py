@@ -98,14 +98,17 @@ def write_review():
     mask_name = get_mask_name(mask_id)[0][0]
 
     if request.method == "POST":
-        ###
         if request.files['review_image']:
             tmp_img_data = request.files['review_image']
+            im= Image.open(tmp_img_data)
+            im.save(buffer, format='png')
+            img = base64.b64encode(buffer.getvalue())
+
         else:
-            tmp_img_data = '/root/mask/flask_env/static/img/no_image.png'
-        im= Image.open(tmp_img_data)
-        im.save(buffer, format='png')
-        img = base64.b64encode(buffer.getvalue())
+            tmp_img_data = 'static/img/no_image.png'
+            im= Image.open(tmp_img_data)
+            im.save(buffer, format='png')
+            img = base64.b64encode(buffer.getvalue())
 
         user_id = session['user_pk_id']
         star_rating = float(request.form['star'])
@@ -117,16 +120,6 @@ def write_review():
         review = tb_review(mask_id, user_id, star_rating, review_text, option1, option2, option3, option4, img)
         db.session.add(review)
         db.session.commit()
-
-        # 데이터 불러오기
-        ### 이미지 데이터 불러오기
-        img_list=[]
-        show = tb_review.query.all()
-        img_df = pd.read_sql(sql='SELECT * FROM tb_review',con=engine)
-        for i in range(len(show)):
-            img_str = img_df['img'].values[i]
-            stage2 = img_str.decode('utf-8')
-            img_list.append(stage2)
         return redirect(url_for('goods.goods_info', data=session['mask_id']))
     else:
         return render_template('review.html', mask_data=mask_name)

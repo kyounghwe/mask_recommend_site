@@ -3,7 +3,7 @@
 마이페이지 / 마이페이지-리뷰목록 / 마이페이지-찜목록 '''
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from read_mysql import get_user, get_my_review, get_my_zzim
-from read_mysql_for_admin import review_delete, modify_review_img, modify_review_content, zzim_delete
+from read_mysql_for_admin import review_delete, modify_review_img, modify_review_content, zzim_delete, modify_review_all
 
 from db_connect import engine, buffer
 import pandas as pd
@@ -37,14 +37,35 @@ def myreview():
 def modify_review():
     if request.method == 'POST':
         r_id = request.form['r_id']
-        if not request.files.get('review_image'):
-            img_data = '/root/mask/flask_env/static/img/no_image.png'
-        else:
+        # if not request.files.get('review_image'):
+        # else:
+        #     img_data = 'static/img/no_image.png'
+        # else:
+        if request.files['review_image']:
+        # if request.files.get('review_image'):
             tmp_img_data = request.files['review_image']
-            im= Image.open(tmp_img_data)
-            im.save(buffer, format='png')
-            img_data = base64.b64encode(buffer.getvalue())
-            modify_review_img(img_data,r_id)
+            # im= Image.open(tmp_img_data)
+            # im.save(buffer, format='png')
+            # img_data = base64.b64encode(buffer.getvalue())
+            # modify_review_img(img_data, r_id)
+        else:
+            print('하아')
+            tmp_img_data = 'static/img/no_image.png'
+        im= Image.open(tmp_img_data)
+        im.save(buffer, format='png')
+        img_data = base64.b64encode(buffer.getvalue())
+        # modify_review_img(img_data, r_id)
+        
+
+        ###
+        # if request.files['review_image']:
+        #     tmp_img_data = request.files['review_image']
+        # else:
+        #     tmp_img_data = 'static/img/no_image.png'
+        # im= Image.open(tmp_img_data)
+        # im.save(buffer, format='png')
+        # img = base64.b64encode(buffer.getvalue())
+        ###
         
         star = request.form['star']
         r_text = request.form['review_text']
@@ -52,7 +73,11 @@ def modify_review():
         r_op2 = request.form['option2']
         r_op3 = request.form['option3']
         r_op4 = request.form['option4']
-        modify_review_content([star, r_text, r_op1, r_op2, r_op3, r_op4, r_id])
+        # modify_review_content([star, r_text, r_op1, r_op2, r_op3, r_op4, r_id, img_data])
+        d = [img_data, star, r_text, r_op1, r_op2, r_op3, r_op4, r_id]
+        modify_review_all(d)
+
+        ###
         return redirect(url_for('user_page.myreview'))
     elif request.method == 'GET':
         r_id = request.args.get('r_id')

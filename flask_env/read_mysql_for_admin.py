@@ -44,7 +44,7 @@ def order_by_star_rating_review_num():
 def review_delete(data):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -59,7 +59,7 @@ def review_delete(data):
 def review_delete(data):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -74,14 +74,41 @@ def review_delete(data):
 def modify_review_img(data1,data2):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
     )
     cursor = mask_db.cursor()
-    sql = f'''UPDATE tb_review SET img={data1} where pk_id={data2}'''
-    cursor.execute(sql)
+    sql = '''UPDATE tb_review SET img=%s where pk_id=%s'''
+    cursor.execute(sql, [data1, data2])
+    mask_db.commit()
+    mask_db.close()
+    return None
+
+######
+def modify_review_all(data):
+    mask_db = pymysql.connect(
+        user='root',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
+        host='0.0.0.0',
+        db='try_mysql',
+        charset='utf8'
+    )
+    # print(data)
+    cursor = mask_db.cursor()
+    sql = '''
+            UPDATE tb_review 
+            SET img=%s, 
+                star_rating = %s,
+                review_text = %s,
+                option1 = %s,
+                option2 = %s,
+                option3 = %s,
+                option4 = %s
+            WHERE pk_id = %s
+        '''
+    cursor.execute(sql, data)
     mask_db.commit()
     mask_db.close()
     return None
@@ -89,12 +116,12 @@ def modify_review_img(data1,data2):
 def modify_review_content(data):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
     )
-    print(data)
+    # print(data)
     cursor = mask_db.cursor()
     sql = f'''
             UPDATE tb_review 
@@ -114,7 +141,7 @@ def modify_review_content(data):
 def zzim_delete(data):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -129,7 +156,7 @@ def zzim_delete(data):
 def make_zzim(data1, data2):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
