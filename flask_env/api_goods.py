@@ -63,7 +63,7 @@ def goods_info():
             img_list.append(stage2)
 
         ### 이미 리뷰를 남긴 상품이면 리뷰를 또 남길 수 없게 하기 - 이미 리뷰를 작성하셨습니다 or 리뷰작성버튼비활성화
-        if session.get('logged_in'):
+        if session.get('user_id'):
             user_id = session['user_id']
             user_id = get_user(user_id)[0][0]
         else:
