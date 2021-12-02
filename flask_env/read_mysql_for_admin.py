@@ -44,7 +44,7 @@ def order_by_star_rating_review_num():
 def review_delete(data):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -59,7 +59,7 @@ def review_delete(data):
 def review_delete(data):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -74,7 +74,7 @@ def review_delete(data):
 def modify_review_img(data1,data2):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -89,7 +89,7 @@ def modify_review_img(data1,data2):
 def modify_review_content(data):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -114,7 +114,7 @@ def modify_review_content(data):
 def zzim_delete(data):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -129,7 +129,7 @@ def zzim_delete(data):
 def make_zzim(data1, data2):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
