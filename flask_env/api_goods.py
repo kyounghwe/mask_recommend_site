@@ -3,8 +3,9 @@
 상품상세페이지 / 리뷰쓰기페이지 '''
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 from read_mysql import read_mask_page_data, read_review_data, get_user, get_mask_name
+from read_mysql_for_admin import make_zzim
 from models import tb_review, tb_zzim
-from db_connect import db, buffer, engine, cursor, conn
+from db_connect import db, buffer, engine
 import base64
 from PIL import Image
 import pandas as pd
@@ -63,7 +64,7 @@ def goods_info():
             img_list.append(stage2)
 
         ### 이미 리뷰를 남긴 상품이면 리뷰를 또 남길 수 없게 하기 - 이미 리뷰를 작성하셨습니다 or 리뷰작성버튼비활성화
-        if session.get('user_id'):
+        if session.get('logged_in'):
             user_id = session['user_id']
             user_id = get_user(user_id)[0][0]
         else:
@@ -84,19 +85,9 @@ def goods_info():
                     flash('이미 찜한 상품입니다.')
                     return redirect(url_for('goods.goods_info'))
                 else:
-                    sql = f'''
-                        INSERT INTO tb_zzim(mask_id, user_id) VALUES({mask_id}, {user_id})
-                    '''
-                    cursor.execute(sql)
-                    conn.commit()
-                    conn.close()
+                    make_zzim(mask_id,user_id)
             else:
-                sql = f'''
-                        INSERT INTO tb_zzim(mask_id, user_id) VALUES({mask_id}, {user_id})
-                    '''
-                cursor.execute(sql)
-                conn.commit()
-                conn.close()
+                make_zzim(mask_id,user_id)
         except:
             pass
         return redirect(url_for('goods.goods_info'))
@@ -115,7 +106,7 @@ def write_review():
         im= Image.open(tmp_img_data)
         im.save(buffer, format='png')
         img = base64.b64encode(buffer.getvalue())
-        ###
+
         user_id = session['user_pk_id']
         star_rating = float(request.form['star'])
         review_text = request.form['review_text']
@@ -125,13 +116,9 @@ def write_review():
         option4 = int(request.form['option4'])
         review = tb_review(mask_id, user_id, star_rating, review_text, option1, option2, option3, option4, img)
         db.session.add(review)
-        ### tb_mask_data 데이터베이스에서 해당 상품의 리뷰수와 별점을 업데이트 하는 코드 추가로 필요
-        ## mask_data = temp_goods_info()
         db.session.commit()
 
         # 데이터 불러오기
-        mask_data_list = read_mask_page_data(mask_id)
-        review_list = read_review_data(mask_id)
         ### 이미지 데이터 불러오기
         img_list=[]
         show = tb_review.query.all()
@@ -141,6 +128,5 @@ def write_review():
             stage2 = img_str.decode('utf-8')
             img_list.append(stage2)
         return redirect(url_for('goods.goods_info', data=session['mask_id']))
-        # return render_template('goods.html', mask_data_list=mask_info_list, review_list=review_list, img_data=img_list, user_id=user_id)
     else:
         return render_template('review.html', mask_data=mask_name)

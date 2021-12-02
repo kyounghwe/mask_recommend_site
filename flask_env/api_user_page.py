@@ -3,8 +3,9 @@
 마이페이지 / 마이페이지-리뷰목록 / 마이페이지-찜목록 '''
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from read_mysql import get_user, get_my_review, get_my_zzim
+from read_mysql_for_admin import review_delete, modify_review_img, modify_review_content, zzim_delete
 
-from db_connect import db, engine, buffer, conn, cursor
+from db_connect import engine, buffer
 import pandas as pd
 import base64
 from PIL import Image
@@ -29,10 +30,7 @@ def myreview():
     else:  # 삭제 버튼 누른 경우
         if request.form['delete']:
             r_id = request.form['r_id']
-            sql = '''DELETE FROM tb_review where pk_id=%s'''
-            cursor.execute(sql, r_id)
-            conn.commit()
-            conn.close()
+            review_delete(r_id)
         return redirect(url_for('user_page.myreview'))
 
 @user_page.route("/modify_review", methods=["GET","POST"])
@@ -46,8 +44,7 @@ def modify_review():
             im= Image.open(tmp_img_data)
             im.save(buffer, format='png')
             img_data = base64.b64encode(buffer.getvalue())
-            img_update = '''UPDATE tb_review SET img=%s where pk_id=%s'''
-            cursor.execute(img_update, [img_data, r_id])
+            modify_review_img(img_data,r_id)
         
         star = request.form['star']
         r_text = request.form['review_text']
@@ -55,20 +52,7 @@ def modify_review():
         r_op2 = request.form['option2']
         r_op3 = request.form['option3']
         r_op4 = request.form['option4']
-
-        update = '''
-                UPDATE tb_review 
-                SET star_rating = %s,
-                review_text = %s,
-                option1 = %s,
-                option2 =%s,
-                option3 = %s,
-                option4 = %s
-                WHERE pk_id = %s
-            '''
-        cursor.execute(update, [star, r_text, r_op1, r_op2, r_op3, r_op4, r_id])
-        conn.commit()
-        conn.close()
+        modify_review_content([star, r_text, r_op1, r_op2, r_op3, r_op4, r_id])
         return redirect(url_for('user_page.myreview'))
     elif request.method == 'GET':
         r_id = request.args.get('r_id')
@@ -86,8 +70,5 @@ def myzzim():
     else:  # 삭제 버튼 누른 경우
         if request.form['delete']:
             r_id = request.form['r_id']
-            sql = '''DELETE FROM tb_zzim where pk_id=%s'''
-            cursor.execute(sql, r_id)
-            conn.commit()
-            conn.close()
+            zzim_delete(r_id)
         return redirect(url_for('user_page.myzzim'))
