@@ -18,7 +18,7 @@ app = Flask(__name__)
 db.init_app(app)
 
 # 'mysql+pymysql://root:<나의mysql비밀번호>@localhost:3306/<내가쓰려는데이터베이스이름>'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:5452tulahyo12!A@localhost:3306/try_mysql'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:3-[z>g9UNk[f-X&EKdW&@localhost:3306/try_mysql'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'the random string'  # session 실행하려면 시크릿키 필요!
 

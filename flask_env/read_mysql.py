@@ -4,7 +4,7 @@ import pymysql
 def read_mask_data():
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -23,7 +23,7 @@ def read_mask_data():
 def read_mask_page_data(data):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -43,7 +43,7 @@ def read_mask_page_data(data):
 def read_review_data(data):  # 리뷰데이터: 이미지 뺀 나머지 컬럼 모두 불러옴
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -63,7 +63,7 @@ def read_review_data(data):  # 리뷰데이터: 이미지 뺀 나머지 컬럼 �
 def get_mask_name(data):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -83,7 +83,7 @@ def get_mask_name(data):
 def get_user(data):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -103,7 +103,7 @@ def get_user(data):
 def get_my_review(data):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
@@ -125,7 +125,7 @@ def get_my_review(data):
 def get_my_zzim(data):
     mask_db = pymysql.connect(
         user='root',
-        passwd='5452tulahyo12!A',
+        passwd='3-[z>g9UNk[f-X&EKdW&',
         host='0.0.0.0',
         db='try_mysql',
         charset='utf8'
